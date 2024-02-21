@@ -21,6 +21,6 @@ For more information about our Gourmet Guru application, please consult the [ins
 | Saghar Sahebi  | saqar-s        |
 | Emmy Song| emmyysong   |
 | Thomas Song   | songtom96       |
-| Rambod Azimi  | rambodasimi     |
+| Rambod Azimi  | rambodazimi     |
 | Keith Crochetiere   | khc1100      |
 
