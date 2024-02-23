@@ -12,6 +12,9 @@ const TextInput = ({
   style,
   width = "50%",
 }) => {
+  const handleChange = (event) => {
+    onClick(event.target.value);
+  };
   return (
     <FormControl sx={{ width: width, ...style }}>
       <FormLabel
@@ -37,7 +40,7 @@ const TextInput = ({
         }}
         helperText={hasError ? helpertext : ""}
         multiline={isMultiline ? true : false}
-        onChange={onClick()}
+        onChange={handleChange}
         value={text}
       ></TextField>
     </FormControl>

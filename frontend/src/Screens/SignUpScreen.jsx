@@ -7,6 +7,7 @@ import {
 } from "../Components";
 import { FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "./APIcalls/AccountCalls";
 
 const SignUpScreen = () => {
   const [username, setUsername] = React.useState("");
@@ -32,12 +33,27 @@ const SignUpScreen = () => {
   };
 
   const handleLogIn = () => {
-    //console.log("LogedIn");
     navigate("/signin");
   };
 
-  const handleSignUp = () => {
-    //console.log("Sign Up");
+  const handleSignUp = async () => {
+    try {
+      const userData = {
+        name: name,
+        email: username,
+        password: password,
+        age: age,
+      };
+      const result = await registerUser(userData);
+
+      if (result && result.data) {
+        console.log(result.data);
+      } else {
+        console.error("Invalid response format", result);
+      }
+    } catch (error) {
+      console.error("Error signing up:", error.message);
+    }
   };
 
   return (

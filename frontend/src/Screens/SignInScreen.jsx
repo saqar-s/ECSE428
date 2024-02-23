@@ -7,10 +7,12 @@ import {
 } from "../Components";
 import { FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "./APIcalls/AccountCalls";
 
 const SignInScreen = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
   const navigate = useNavigate();
 
   const handleUsernameChange = (text) => {
@@ -21,15 +23,23 @@ const SignInScreen = () => {
     setPassword(text);
   };
 
-  const handleLogIn = () => {
-    console.log("LogedIn");
-  };
-
   const handleSignUp = () => {
     console.log("Sign Up");
     navigate("/signup");
   };
 
+  const handleLogIn = async () => {
+    try {
+      const userData = { email: username, password };
+      const response = await loginUser(userData);
+
+      console.log("User logged in:", response);
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+    }
+  };
   return (
     <div
       style={{
