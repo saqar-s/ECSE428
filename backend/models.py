@@ -1,4 +1,8 @@
-from app import db
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 class User(db.Model):
     """
@@ -16,9 +20,8 @@ class User(db.Model):
         - login_user() --> POST (/login)
         - logout_user() --> GET (/logout)
     """
-    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
 
