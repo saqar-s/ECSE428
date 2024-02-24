@@ -1,7 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar } from "./Components";
-import { SignInScreen, SignUpScreen, DashboardScreen } from "./Screens";
+import {
+  SignInScreen,
+  SignUpScreen,
+  DashboardScreen,
+  UserAccountScreen,
+} from "./Screens";
 
 function App() {
   return (
@@ -11,6 +16,7 @@ function App() {
         <Route path="/" element={<DashboardScreen />} />
         <Route path="/signin" element={<SignInScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
+        <Route path="/account" element={<UserAccountScreen />} />
       </Routes>
     </BrowserRouter>
   );
