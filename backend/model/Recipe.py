@@ -18,7 +18,6 @@ class Recipe():
         Vegan = auto()
         Vegetarian = auto()
         Pescatarian = auto()
-        All = auto()
 
     #------------------------
     # MEMBER VARIABLES

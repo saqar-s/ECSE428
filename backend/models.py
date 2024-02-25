@@ -55,8 +55,8 @@ class Recipe(db.Model):
     origin = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(100), nullable=False)
-    user = db.Columns(db.Integer, db.ForeignKey('user.email'))
-    user = db.relationship('User', back_populates='recipes')
+    # user = db.Columns(db.Integer, db.ForeignKey('user.email'))
+    # user = db.relationship('User', back_populates='recipes')
 
   
 

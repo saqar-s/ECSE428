@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from account import account
-from models import db, migrate
+from models import db, migrate, User
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
