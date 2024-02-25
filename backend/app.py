@@ -1,46 +1,18 @@
-from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from flask_cors import CORS
-from datetime import datetime
-
+from account import account
+from models import db, migrate
 
 app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SECRET_KEY'] = 'some string'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://recipe_database_gp57_user:zKPQLZ5Al0DI2lE3y5z8yPfcdZTr9Scn@dpg-cn42fb7109ks73eskttg-a.oregon-postgres.render.com/recipe_database_gp57'
-db = SQLAlchemy(app)
-CORS(app)
+CORS(app, supports_credentials=True, methods=["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"])
 
-class Event (db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-    def __repr__(self) :
-        return f"Event: {self.description}"
-    def __init__ (self, description):
-        self. description = description
+db.init_app(app)
+migrate.init_app(app, db)
 
-def format_event (event):
-    return {
-        "description": event.description,
-        "id": event. id,
-        "created_at": event.created_at
-        }
-
-@app.route('/event', methods = ['POST'])
-def create_event():
-    description = request.json['description']
-    event = Event(description)
-    db.session.add(event)
-    db.session.commit()
-    #this part is to grab the information and format it into an object to be able to use it in the frontend later on 
-    return format_event(event)
-
-@app.route('/event', methods=['GET'])
-def get_event():
-    events= Event.query.order_by(Event.id.asc()).all()
-    event_list = []
-    for event in events:
-        event_list.append(format_event(event))
-    return {'events': event_list}
+app.register_blueprint(account)
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(debug=True , port=8000, use_reloader=False)
