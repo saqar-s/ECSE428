@@ -111,7 +111,6 @@ def modify_user():
         return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
 
     except Exception as e:
-        return jsonify({'message': str(e)}), 500
     
 
 # Due to current testing issues, the current delete function requires the email and password.
