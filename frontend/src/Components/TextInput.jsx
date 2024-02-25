@@ -1,6 +1,15 @@
-import React from "react";
-import { FormControl, FormLabel, TextField } from "@mui/material";
+import React, { useState } from "react";
+import {
+  FormControl,
+  FormLabel,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { COLORS, FONTS } from "../GLOBAL";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const TextInput = ({
   label,
@@ -11,10 +20,18 @@ const TextInput = ({
   onClick,
   style,
   width = "50%",
+  hide,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (event) => {
     onClick(event.target.value);
   };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <FormControl sx={{ width: width, ...style }}>
       <FormLabel
@@ -37,13 +54,30 @@ const TextInput = ({
             backgroundColor: COLORS.White,
             height: "50px",
           },
+          endAdornment: hide && (
+            <InputAdornment position="end">
+              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
         }}
-        helperText={hasError ? helpertext : ""}
+        type={hide && !showPassword ? "password" : "text"}
+        helperText={
+          hasError ? (
+            <Typography variant="caption" sx={{ color: "red" }}>
+              {helpertext}
+            </Typography>
+          ) : (
+            ""
+          )
+        }
         multiline={isMultiline ? true : false}
         onChange={handleChange}
         value={text}
-      ></TextField>
+      />
     </FormControl>
   );
 };
+
 export default TextInput;

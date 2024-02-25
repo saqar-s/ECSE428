@@ -5,9 +5,13 @@ import {
   Button,
   ThemeProvider,
   createTheme,
+  Avatar,
 } from "@mui/material";
 import { COLORS, FONTS } from "../GLOBAL";
 import { Link } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useHistory } from "react-router-dom";
+import { isLoggedIn, removeToken } from "../Auth";
 
 const NavBar = () => {
   const pages = [
@@ -15,7 +19,6 @@ const NavBar = () => {
     { name: "Make a post", path: "/post" },
     { name: "Calendar", path: "/calendar" },
     { name: "Favorites", path: "/favorites" },
-    { name: "Account", path: "/signin" },
   ];
 
   const theme = createTheme({
@@ -27,26 +30,51 @@ const NavBar = () => {
     },
     typography: {
       fontFamily: FONTS.InriaSerif,
-      fontSize: 18,
+      fontSize: 20,
       fontWeightMedium: "normal",
     },
   });
 
+  const handleAccountClick = () => {
+    if (isLoggedIn()) {
+      return "/account";
+    } else {
+      return "/signin";
+    }
+  };
+  const accountPath = handleAccountClick();
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="static" sx={styles.appBar}>
         <Toolbar sx={styles.toolbar}>
-          {pages.map((page) => (
+          <div style={styles.centerButtons}>
+            {pages.map((page) => (
+              <Button
+                key={page.name}
+                color="inherit"
+                sx={styles.button}
+                component={Link}
+                to={page.path}
+              >
+                {page.name}
+              </Button>
+            ))}
+          </div>
+          <div style={styles.accountButton}>
             <Button
-              key={page.name}
               color="inherit"
               sx={styles.button}
               component={Link}
-              to={page.path}
+              to={accountPath}
+              endIcon={
+                <Avatar sx={styles.avatarIcon}>
+                  <AccountCircleIcon />
+                </Avatar>
+              }
             >
-              {page.name}
+              Account
             </Button>
-          ))}
+          </div>
         </Toolbar>
       </AppBar>
     </ThemeProvider>
@@ -58,15 +86,28 @@ const styles = {
     bgcolor: "main",
   },
   toolbar: {
+    display: "flex",
     justifyContent: "center",
-    gap: 4,
     overflowX: "auto",
     overflowY: "hidden",
     maxHeight: 100,
     whiteSpace: "nowrap",
+    alignItems: "center",
+  },
+  centerButtons: {
+    display: "flex",
+    gap: 24,
+  },
+  accountButton: {
+    position: "absolute",
+    right: "55px",
   },
   button: {
     textTransform: "none",
+  },
+  avatarIcon: {
+    width: 30,
+    height: 30,
   },
 };
 
