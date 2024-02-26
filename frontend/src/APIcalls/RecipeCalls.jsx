@@ -13,7 +13,7 @@ const api = axios.create({
 
 export const createRecipe = async (data) => {
   try {
-    const response = await api.post("/createRecipe", data);
+    const response = await api.post('/createRecipe', data);
     return { status: response.status, message: "Created recipe successfully" };
   } catch (error) {
     if (error.response) {

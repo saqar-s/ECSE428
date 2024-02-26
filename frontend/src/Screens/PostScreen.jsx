@@ -66,11 +66,6 @@ const PostScreen = () => {
       // setError("Error creating recipe:", error.message);
       // setOpen(true);
     }
-    setRecipeName("");
-    setServingSize("");
-    setOrigin("");
-    setMealType("");
-    setDescription("");
 
 
   };
