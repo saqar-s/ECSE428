@@ -7,14 +7,20 @@ import {
 } from "../Components";
 
 import { useLocation } from "react-router-dom";
+import { modifyUserDetails } from "../APIcalls/AccountCalls";
+import { logoutUser } from "../APIcalls/AccountCalls";
+import { useNavigate } from "react-router-dom";
+
 
 const UserAccountScreen = () => {
   const location = useLocation();
-  const { username, name, age } = location.state;
+  const navigate = useNavigate();
+  const { username, name, age, password } = location.state;
 
   const [usernameModified, setUsername] = React.useState(username);
-  const [ageModified, setAge] = React.useState(name);
-  const [nameModified, setName] = React.useState(age);
+  const [ageModified, setAge] = React.useState(age);
+  const [nameModified, setName] = React.useState(name);
+  const [passwordModified, setPassword] = React.useState(password);
 
   const handleUsernameChange = (text) => {
     setUsername(text);
@@ -26,6 +32,32 @@ const UserAccountScreen = () => {
 
   const handleAgeChange = (text) => {
     setAge(text);
+  };
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+  };
+
+  const handleModify = async () => {
+    try{
+      const response = await modifyUserDetails({name: nameModified, age: ageModified, email: username});
+      console.log(response);
+      console.log("Changing info to: ", nameModified, ageModified)
+      console.log("From: ", name,  age);
+    }
+    catch (error) {
+      console.error("Could not modify data: ", error)
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await logoutUser();
+      console.log(response);
+    }catch (error){
+      console.error("Could not logout: ", error);
+    }
+    navigate("/signin");
   };
 
   return (
@@ -44,6 +76,7 @@ const UserAccountScreen = () => {
         />
       </div>
 
+      <span style={{ color: 'red' }}> *You cannot modify your email</span>
       <TextInput
         label={"Username"}
         text={usernameModified}
@@ -72,7 +105,10 @@ const UserAccountScreen = () => {
           justifyContent: "center",
         }}
       >
-        <CustomButton label={"Save"} style={{ width: "10%", height: "40px" }} />
+        <CustomButton 
+          label={"Save"} 
+          style={{ width: "10%", height: "40px" }} 
+          onClick={handleModify} />
         <CustomButton
           label={"Delete Account"}
           style={{ width: "10%", height: "40px" }}
@@ -80,6 +116,7 @@ const UserAccountScreen = () => {
         <CustomButton
           label={"Log out"}
           style={{ width: "10%", height: "40px" }}
+          onClick={handleLogout}
         />
       </div>
     </div>

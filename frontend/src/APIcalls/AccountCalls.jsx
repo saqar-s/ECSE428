@@ -75,3 +75,32 @@ export const logoutUser = async () => {
     throw error.response.data;
   }
 };
+
+export const modifyUserDetails = async (data) => {
+  try {
+    //const response = await api.post("/modify", data);
+    const response = await api.put('/modify', data)
+    return {
+      response: response,
+      status: response.status,
+      message: "User details modified successfully",
+    };
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      let errorMessage;
+      switch (status) {
+        /** 
+        case 401:
+          errorMessage = "User not logged in";
+          break;*/
+        default:
+          errorMessage = "Failed to modify user details";
+          break;
+      }
+      return { status, message: errorMessage };
+    } else {
+      return { status: 500, message: "Internal server error" };
+    }
+  }
+};

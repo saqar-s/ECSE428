@@ -64,3 +64,26 @@ def logout_user():
     # Clear the session
     session.clear()
     return jsonify({'message': 'Logout successful'}), 200
+
+
+@account.route('/modify', methods=['PUT'])
+def modify_user():
+    try:
+        data = request.json
+        email = data.get('email')
+        name = data.get('name')
+        age = data.get('age')
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return jsonify({'message': 'User does not exist'}), 404
+
+        session['user_email'] = user.email
+        user.name = name
+        user.age = age
+        db.session.commit()
+        return format_user(user)
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
