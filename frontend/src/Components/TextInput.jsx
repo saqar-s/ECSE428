@@ -21,6 +21,8 @@ const TextInput = ({
   style,
   width = "50%",
   hide,
+  labelColor = COLORS.Black,
+  inputHeight = "50px"
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,7 +38,7 @@ const TextInput = ({
     <FormControl sx={{ width: width, ...style }}>
       <FormLabel
         sx={{
-          color: COLORS.Black,
+          color: labelColor,
           fontFamily: FONTS.InriaSerif,
           fontSize: 16,
           marginBottom: 0.5,
@@ -52,7 +54,7 @@ const TextInput = ({
             border: "none",
             borderRadius: 16,
             backgroundColor: COLORS.White,
-            height: "50px",
+            height: inputHeight,
           },
           endAdornment: hide && (
             <InputAdornment position="end">
