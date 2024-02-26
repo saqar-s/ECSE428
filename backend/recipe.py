@@ -45,7 +45,6 @@ def delete_recipe():
         name = data.get("name") 
         
         deleted_recipe = Recipe.query.filter_by(name=name).first()
-        
         #will only delete recipe from db if a recipe is found by the name
         if deleted_recipe:
             db.session.delete(deleted_recipe)

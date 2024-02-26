@@ -8,6 +8,7 @@ import {
 import { FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
 import { createRecipe } from "../APIcalls/RecipeCalls";
+import { deleteRecipe } from "../APIcalls/RecipeCalls";
 import { Alert, Snackbar } from "@mui/material";
 
 const PostScreen = () => {
@@ -19,6 +20,7 @@ const PostScreen = () => {
   // const [passwordError, setPasswordError] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [recipeNameToDelete, setRecipeNameToDelete] = React.useState("");
 
 
   const handleRecipeNameChange = (text) => {
@@ -76,6 +78,31 @@ const PostScreen = () => {
     }
     setOpen(false);
   };
+
+  const handleNameForDelete = (text) => {
+    setRecipeNameToDelete(text);
+  };
+
+  const handleDeleteRecipe = async () => {
+    try {
+      const userData = {
+        name : recipeNameToDelete,
+
+      };
+
+      const result = await deleteRecipe(userData);
+      console.log(`this is what result is giving me ${result}`);
+      if (result && result.status === 200) {
+        recipeNameToDelete("");
+      }
+      else {
+        console.log(`something bad is hapenning bobby ${recipeNameToDelete}`)
+      }
+    }
+    catch (error) {
+
+    }
+  }
 
 
 
@@ -135,6 +162,18 @@ const PostScreen = () => {
           onClick={handleCreateRecipe}
           style={{ width: "10%", height: "40px", marginBottom: 6 }}
         />
+        <TextInput
+          label={"Delete a Recipe"}
+          text={recipeNameToDelete}
+          onClick={handleNameForDelete}
+          style={{ marginBottom: 6 }}
+        />
+        <CustomButton
+          label={"Delete Recipe"}
+          onClick={handleDeleteRecipe}
+          style={{ width: "10%", height: "40px", marginBottom: 6 }}
+        />
+        
       </div> /* not fully functional */
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCLose}>
         <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
