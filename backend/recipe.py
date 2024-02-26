@@ -20,15 +20,18 @@ def format_recipe(recipe):
 def register_user():
     data = request.json
     name = data.get('name')
-    email = data.get('email')
+    # email = data.get('email')
     servingSize = data.get('servingSize')
     description = data.get('description')
     origin = data.get('origin')
     category = data.get('category')
 
     # Find the user
-    user = User.query.filter_by(email=email).first()
-    new_recipe = Recipe(name, servingSize, origin, category, description, user)
+    # user = User.query.filter_by(email=email).first()
+
+    if (not (name and not name.isspace())):
+        return jsonify({'message': 'The recipe must have a name'}), 400
+    new_recipe = Recipe(name, servingSize, origin, category, description)
     db.session.add(new_recipe)
     db.session.commit()
 

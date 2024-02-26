@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
+    "@emotion/serialize": "^1.1.3",
     "@emotion/styled": "^11.11.0",
     "@fontsource/irish-grover": "^4.0.1",
     "@mui/icons-material": "^5.15.10",
