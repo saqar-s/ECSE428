@@ -20,7 +20,6 @@ class User(db.Model):
         - login_user() --> POST (/login)
         - logout_user() --> GET (/logout)
     """
-    __tablename__='users'
 
     email = db.Column(db.String(100), unique=True, nullable=False, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -46,19 +45,16 @@ class Recipe(db.Model):
     Routes:
         - create_recipe() --> POST (/createRecipe)
     """
-
-    __tablename__='recipes'
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     servingSize = db.Column(db.Integer, nullable=False)
     origin = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(10000), nullable=False)
     # user = db.Columns(db.Integer, db.ForeignKey('user.email'))
     # user = db.relationship('User', back_populates='recipes')
 
   
 
     def __repr__(self):
-        return f"Recipe('{self.name}', '{self.user}')"
+        return f"Recipe('{self.name}')"
