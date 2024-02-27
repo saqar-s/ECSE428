@@ -56,7 +56,8 @@ const SignUpScreen = () => {
       if (result && result.status === 200) {
         localStorage.setItem("username", username);
         localStorage.setItem("user", name);
-        navigate("/account", { state: { username, name, age } });
+        localStorage.setItem("age", age);
+        navigate("/account");
       } else if (result.status === 400) {
         setEmailError(result.message);
       } else {
@@ -141,7 +142,7 @@ const SignUpScreen = () => {
         />
       </div>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCLose}>
-        <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
+        <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
           {error}
         </Alert>
       </Snackbar>

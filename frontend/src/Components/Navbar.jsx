@@ -35,12 +35,16 @@ const NavBar = () => {
   });
 
   const handleAccountClick = () => {
-    const isLoggedIn = localStorage.getItem("user").length > 0 ? true : false;
-    if (isLoggedIn) {
-      return "/account";
+    const loggedInUser = localStorage.getItem("username");
+    console.log(loggedInUser);
+    let result;
+    if (loggedInUser !== null) {
+      result = "/account";
     } else {
-      return "/signin";
+      result = "/signin";
     }
+    console.log(result);
+    return result;
   };
   const accountPath = handleAccountClick();
   return (

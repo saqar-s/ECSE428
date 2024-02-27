@@ -44,7 +44,8 @@ const SignInScreen = () => {
         const { name, age } = result.response.data;
         localStorage.setItem("username", username);
         localStorage.setItem("user", name);
-        navigate("/account", { state: { username, name, age } });
+        localStorage.setItem("age", age);
+        navigate("/account");
         console.log(result.message);
       } else if (result.status === 404) {
         setEmaiError(result.message);

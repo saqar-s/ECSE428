@@ -10,16 +10,25 @@ import { useLocation } from "react-router-dom";
 import { modifyUserDetails } from "../APIcalls/AccountCalls";
 import { logoutUser } from "../APIcalls/AccountCalls";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 
 const UserAccountScreen = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { username, name, age, password } = location.state;
+  const username = localStorage.getItem("username");
+  const name = localStorage.getItem("user");
+  const age = localStorage.getItem("age");
 
   const [usernameModified, setUsername] = React.useState(username);
   const [ageModified, setAge] = React.useState(age);
   const [nameModified, setName] = React.useState(name);
-  const [passwordModified, setPassword] = React.useState(password);
+  const [open, setOpen] = React.useState(false);
 
   const handleUsernameChange = (text) => {
     setUsername(text);
@@ -56,6 +65,16 @@ const UserAccountScreen = () => {
       console.error("Could not logout: ", error);
     }
     navigate("/signin");
+  };
+
+  const handleDialog = () => {
+    setOpen(!open);
+  };
+
+  const handleDeleteAccount = () => {
+    //BE call to delete user
+    localStorage.clear();
+    setOpen(!open);
   };
 
   return (
@@ -111,7 +130,33 @@ const UserAccountScreen = () => {
         <CustomButton
           label={"Delete Account"}
           style={{ width: "10%", height: "40px" }}
+          onClick={handleDialog}
         />
+        {open && (
+          <Dialog
+            open={open}
+            onClose={handleDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure you want to delete your account?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Once you delete your account you cannot revert the change and
+                will need to create a new account if you would like to use our
+                website.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDialog}>Cancel</Button>
+              <Button onClick={handleDeleteAccount} autoFocus>
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
         <CustomButton
           label={"Log out"}
           style={{ width: "10%", height: "40px" }}
