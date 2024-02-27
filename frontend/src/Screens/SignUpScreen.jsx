@@ -54,6 +54,8 @@ const SignUpScreen = () => {
       const result = await registerUser(userData);
 
       if (result && result.status === 200) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("user", name);
         navigate("/account", { state: { username, name, age } });
       } else if (result.status === 400) {
         setEmailError(result.message);

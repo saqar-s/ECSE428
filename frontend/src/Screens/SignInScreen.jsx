@@ -42,6 +42,8 @@ const SignInScreen = () => {
 
       if (result && result.status === 200) {
         const { name, age } = result.response.data;
+        localStorage.setItem("username", username);
+        localStorage.setItem("user", name);
         navigate("/account", { state: { username, name, age } });
         console.log(result.message);
       } else if (result.status === 404) {

@@ -11,7 +11,6 @@ import { modifyUserDetails } from "../APIcalls/AccountCalls";
 import { logoutUser } from "../APIcalls/AccountCalls";
 import { useNavigate } from "react-router-dom";
 
-
 const UserAccountScreen = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,19 +33,18 @@ const UserAccountScreen = () => {
     setAge(text);
   };
 
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-  };
-
   const handleModify = async () => {
-    try{
-      const response = await modifyUserDetails({name: nameModified, age: ageModified, email: username});
+    try {
+      const response = await modifyUserDetails({
+        name: nameModified,
+        age: ageModified,
+        email: username,
+      });
       console.log(response);
-      console.log("Changing info to: ", nameModified, ageModified)
-      console.log("From: ", name,  age);
-    }
-    catch (error) {
-      console.error("Could not modify data: ", error)
+      console.log("Changing info to: ", nameModified, ageModified);
+      console.log("From: ", name, age);
+    } catch (error) {
+      console.error("Could not modify data: ", error);
     }
   };
 
@@ -54,7 +52,7 @@ const UserAccountScreen = () => {
     try {
       const response = await logoutUser();
       console.log(response);
-    }catch (error){
+    } catch (error) {
       console.error("Could not logout: ", error);
     }
     navigate("/signin");
@@ -76,7 +74,7 @@ const UserAccountScreen = () => {
         />
       </div>
 
-      <span style={{ color: 'red' }}> *You cannot modify your email</span>
+      <span style={{ color: "red" }}> You cannot modify your email</span>
       <TextInput
         label={"Username"}
         text={usernameModified}
@@ -105,10 +103,11 @@ const UserAccountScreen = () => {
           justifyContent: "center",
         }}
       >
-        <CustomButton 
-          label={"Save"} 
-          style={{ width: "10%", height: "40px" }} 
-          onClick={handleModify} />
+        <CustomButton
+          label={"Save"}
+          style={{ width: "10%", height: "40px" }}
+          onClick={handleModify}
+        />
         <CustomButton
           label={"Delete Account"}
           style={{ width: "10%", height: "40px" }}
