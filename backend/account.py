@@ -159,10 +159,9 @@ def delete_user():
 
 @account.route('/searchuser', methods=['GET'])
 def search_user():
-    #session['user_email'] check for admin but we don't have admin yet
-    data = request.json
-    email = data.get('email')
-    existing_user = User.query.filter_by(email=email).first()
+    existing_user = User.query.filter_by(email = session['user_email']).first()
     if not existing_user:
+        session.clear()
         return jsonify({'message': 'User does not exist'}), 404
-    return format_user(existing_user)
+    userlist = User.query.all
+    return format_user(userlist)
