@@ -37,11 +37,10 @@ export const createRecipe = async (data) => {
 };
 
 export const deleteRecipe = async (data) => {
-  try{
+  try {
     const response = await api.delete('/deleteRecipe', data);
     return { status: response.status, message: "Recipe has been deleted" };
-  }
-  catch (error) {
+  } catch (error) {
     if (error.response) {
       const status = error.response.status;
       let errorMessage;
@@ -54,8 +53,10 @@ export const deleteRecipe = async (data) => {
           errorMessage = "Deletion failed";
           break;
       }
+
+      return { status, message: "RecipeCalls error message" }; // Return the error message here
     } else {
-    return { status: 500, message: "Internal RecipeCalls error" };
+      return { status: 500, message: "Internal RecipeCalls error" };
     } 
   }
 };

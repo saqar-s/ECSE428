@@ -83,10 +83,12 @@ const PostScreen = () => {
   const handleModalClick = () => {
     setDialogOpen(!dialogOpen);
     console.log();
-    const handleNameForDelete = (text) => {
-      setRecipeNameToDelete(text);
+  }
+
+  const handleNameForDelete = (text) => {
+    setRecipeNameToDelete(text);
   };
-  
+
   const handleDeleteRecipe = async () => {
     try {
       const userData = {
@@ -94,7 +96,7 @@ const PostScreen = () => {
       };
   
       const result = await deleteRecipe(userData);
-      console.log(`this is what result is giving me ${result}`);
+      console.log(`this is what result is giving me ${result} and the status is ${result.status}`);
       if (result && result.status === 200) {
         recipeNameToDelete("");
       }
@@ -107,7 +109,7 @@ const PostScreen = () => {
     }
   }
 
-return (
+  return (
     <div
       style={{
         display: "flex",
@@ -122,9 +124,20 @@ return (
       </div>
       <CustomButton
         label={"Make a post"}
-        style={{ width: "30%" }}
+        style={{ width: "30%", marginBottom: 6 }}
         onClick={handleModalClick}
       />
+      <TextInput
+          label={"Delete a Recipe"}
+          text={recipeNameToDelete}
+          onClick={handleNameForDelete}
+          style={{ marginBottom: 6 }}
+        />
+        <CustomButton
+          label={"Delete Recipe"}
+          onClick={handleDeleteRecipe}
+          style={{ width: "10%", height: "40px", marginBottom: 6 }}
+        />
       {dialogOpen && (
         <Dialog
           open={dialogOpen}
@@ -202,20 +215,7 @@ return (
         {error} 
       </Alert>
     </Snackbar>
-    <TextInput
-          label={"Delete a Recipe"}
-          text={recipeNameToDelete}
-          onClick={handleNameForDelete}
-          style={{ marginBottom: 6 }}
-        />
-        <CustomButton
-          label={"Delete Recipe"}
-          onClick={handleDeleteRecipe}
-          style={{ width: "10%", height: "40px", marginBottom: 6 }}
-        />
     </div>
   );
 };
-}
-
 export default PostScreen;
