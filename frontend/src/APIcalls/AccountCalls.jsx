@@ -104,3 +104,24 @@ export const modifyUserDetails = async (data) => {
     }
   }
 };
+
+export const getUserList = async () => {
+  try {
+    const response = await api.get("/searchuser");
+    //response.then(console.log(response.data));
+    // console.log("heloo")
+    // console.log((await response).data)
+    return response.data; //return user names
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      let errorMessage;
+
+      errorMessage = "Data base was empty of Users!"
+
+      return { status, message: errorMessage };
+    } else {
+      return { status: 500, message: "Internal server error" };
+    }
+  }
+};
