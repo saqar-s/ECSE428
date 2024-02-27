@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import { createRecipe } from "../APIcalls/RecipeCalls";
 import { deleteRecipe } from "../APIcalls/RecipeCalls";
-import { Alert, Snackbar } from "@mui/material";
 
 const PostScreen = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -86,30 +85,29 @@ const PostScreen = () => {
     console.log();
     const handleNameForDelete = (text) => {
       setRecipeNameToDelete(text);
-    };
+  };
   
-    const handleDeleteRecipe = async () => {
-      try {
-        const userData = {
-          name : recipeNameToDelete,
+  const handleDeleteRecipe = async () => {
+    try {
+      const userData = {
+        name : recipeNameToDelete,
+      };
   
-        };
-  
-        const result = await deleteRecipe(userData);
-        console.log(`this is what result is giving me ${result}`);
-        if (result && result.status === 200) {
-          recipeNameToDelete("");
-        }
-        else {
-          console.log(`something bad is hapenning bobby ${recipeNameToDelete}`)
-        }
+      const result = await deleteRecipe(userData);
+      console.log(`this is what result is giving me ${result}`);
+      if (result && result.status === 200) {
+        recipeNameToDelete("");
       }
-      catch (error) {
-  
+      else {
+        console.log(`something bad is hapenning bobby ${recipeNameToDelete}`)
       }
     }
+    catch (error) {
 
-  return (
+    }
+  }
+
+return (
     <div
       style={{
         display: "flex",
@@ -218,4 +216,6 @@ const PostScreen = () => {
     </div>
   );
 };
+}
+
 export default PostScreen;
