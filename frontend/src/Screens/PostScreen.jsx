@@ -41,14 +41,15 @@ const PostScreen = () => {
     setDescription(text);
   };
   const handleCreateRecipe = async () => {
+    console.log(localStorage.getItem("username"))
     try {
       const userData = {
         name: recipeName,
         ingredients: ingredients,
         description: description,
-        email: localStorage.get("username")
+        email: localStorage.getItem("username"),
       };
-
+      
       const result = await createRecipe(userData);
       console.log(result)
       console.log(ingredients)
