@@ -1,3 +1,4 @@
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -53,3 +54,51 @@ class Recipe(db.Model):
 
     def __repr__(self):
         return f"Recipe('{self.name}')"
+    
+ # View all recipes for the dashboard
+@app.route('/dashboard/recipes', methods=['GET'])
+def view_all_recipes():
+    """
+    Route to view all recipes for the dashboard
+    """
+    try:
+        recipes = Recipe.query.all()
+        recipe_list = []
+        for recipe in recipes:
+            recipe_data = {
+                'id': recipe.id,
+                'name': recipe.name,
+                'ingredients': recipe.ingredients,
+                'description': recipe.description,
+                'email': recipe.email
+            }
+            recipe_list.append(recipe_data)
+        return jsonify({'recipes': recipe_list}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Route to view all recipes associated with a specific user
+@app.route('/user/<user_email>/recipes', methods=['GET'])
+def view_user_recipes(user_email):
+    try:
+        user = User.query.get(user_email)
+        if user:
+            user_recipes = user.recipes
+            recipe_list = []
+            for recipe in user_recipes:
+                recipe_data = {
+                    'id': recipe.id,
+                    'name': recipe.name,
+                    'ingredients': recipe.ingredients,
+                    'description': recipe.description,
+                    'email': recipe.email
+                }
+                recipe_list.append(recipe_data)
+            return jsonify({'user_recipes': recipe_list}), 200
+        else:
+            return jsonify({'message': 'User not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

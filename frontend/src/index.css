@@ -2,3 +2,15 @@ body {
   margin: 0;
   background-color: #ffece1;
 }
+
+.filter-recipes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-input {
+  margin-right: 10px;
+}
+
