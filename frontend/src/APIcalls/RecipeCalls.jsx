@@ -25,7 +25,7 @@ export const createRecipe = async (data) => {
           errorMessage = "The recipe must have a name";
           break;
         default:
-          errorMessage = "Registration failed";
+          errorMessage = "Recipe creation failed";
           break;
       }
 
