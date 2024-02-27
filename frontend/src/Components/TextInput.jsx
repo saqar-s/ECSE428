@@ -16,13 +16,14 @@ const TextInput = ({
   text,
   helpertext,
   hasError,
-  isMultiline,
+  isMultiline = false,
   onClick,
   style,
   width = "50%",
   hide,
   labelColor = COLORS.Black,
-  inputHeight = "50px"
+  inputHeight = "50px",
+  rows = 4,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -54,7 +55,7 @@ const TextInput = ({
             border: "none",
             borderRadius: 16,
             backgroundColor: COLORS.White,
-            height: inputHeight,
+            height: isMultiline ? "auto" : inputHeight,
           },
           endAdornment: hide && (
             <InputAdornment position="end">
@@ -74,7 +75,8 @@ const TextInput = ({
             ""
           )
         }
-        multiline={isMultiline ? true : false}
+        rows={rows}
+        multiline={isMultiline}
         onChange={handleChange}
         value={text}
       />
