@@ -108,7 +108,7 @@ def modify_user():
         user.name = name
         user.age = age
         db.session.commit()
-        return jsonify({'message': 'User update successful'}), 200
+        return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
