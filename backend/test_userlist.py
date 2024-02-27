@@ -43,7 +43,8 @@ class TestUserlist(unittest.TestCase):
         self.app.post('/login', json=data)
         response = self.app.get('/searchuser')
         self.assertEqual(response.status_code,203)
-        #self.assertEqual(response.json[0] == dummy_data1.name)
+        self.assertEqual(response.json[0], dummy_data1["name"])
+        self.assertEqual(response.json[1], dummy_data2["name"])
 
         # Unit test 1: Search User list Success (Normal Flow)
     def test_userlist(self):
