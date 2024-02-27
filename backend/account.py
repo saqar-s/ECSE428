@@ -111,6 +111,7 @@ def modify_user():
         return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
 
     except Exception as e:
+        return jsonify({'message': str(e)}), 500
     
 
 # Due to current testing issues, the current delete function requires the email and password.
@@ -152,19 +153,4 @@ def delete_user():
             return 'Error, unable to delete account, please contact an admin...'
 
 """
-
-@account.route('/searchuser', methods=['GET'])
-def search_user():
-    # email = session['user_email']
-    # existing_user = User.query.filter_by(email = session['user_email']).first()
-    # if not existing_user:
-    #     session.clear()
-    #     return jsonify({'message': 'Please log In again'}), 405
-    users = User.query.all()
-    if not users:
-        return jsonify({'message': 'There are no users in the database'}), 406
-    newlist = []
-    for user in users:
-        newlist.append(user.name)
-    tup = tuple(newlist)
-    return jsonify(tup),203
+    
