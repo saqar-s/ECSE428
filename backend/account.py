@@ -6,14 +6,12 @@ from models import db,User
 account = Blueprint('account', __name__)
 
 CORS(account)
-"""
 def format_user(user):
     return {
         "name": user.name,
         "email": user.email,
         "age": user.age
     }
-"""
 
 
 @account.route('/register', methods=['POST'])
@@ -34,7 +32,7 @@ def register_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'Registration successful'}), 201
+    return format_user(new_user)
 
 
 @account.route('/login', methods=['POST'])
@@ -54,7 +52,7 @@ def login_user():
 
         session['user_email'] = user.email
 
-        return jsonify({'message': 'Login successful'}), 201
+        return format_user(user)
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
@@ -85,7 +83,7 @@ def modify_user():
         user.name = name
         user.age = age
         db.session.commit()
-        return jsonify({'message': 'User update successful'}), 200
+        return format_user(user)
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
