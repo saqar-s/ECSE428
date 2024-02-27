@@ -159,9 +159,16 @@ def delete_user():
 
 @account.route('/searchuser', methods=['GET'])
 def search_user():
-    existing_user = User.query.filter_by(email = session['user_email']).first()
-    if not existing_user:
-        session.clear()
-        return jsonify({'message': 'User does not exist'}), 404
-    userlist = User.query.all
-    return format_user(userlist)
+    # email = session['user_email']
+    # existing_user = User.query.filter_by(email = session['user_email']).first()
+    # if not existing_user:
+    #     session.clear()
+    #     return jsonify({'message': 'Please log In again'}), 405
+    users = User.query.all()
+    if not users:
+        return jsonify({'message': 'There are no users in the database'}), 406
+    newlist = []
+    for user in users:
+        newlist.append(user.name)
+    tup = tuple(newlist)
+    return jsonify(tup)
