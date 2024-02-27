@@ -43,13 +43,15 @@ const PostScreen = () => {
     setDescription(text);
   };
   const handleCreateRecipe = async () => {
+    console.log(localStorage.getItem("username"))
     try {
       const userData = {
         name: recipeName,
         ingredients: ingredients,
         description: description,
+        email: localStorage.getItem("username"),
       };
-
+      
       const result = await createRecipe(userData);
       console.log(result)
       console.log(ingredients)
@@ -196,17 +198,18 @@ const PostScreen = () => {
               isMultiline={true}
               style={{ marginBottom: 2 }}
               labelColor="white"
-              inputHeight="100px"
               text={description}
               onClick={handleDescriptionChange}
             />
-            <CustomButton
-              label={"Save"}
-              onClick={handleCreateRecipe}
-              style={{ width: "20%", height: "50px", marginBottom: 2}}
-              backgroundChangeColor="white"
-              backgroundColor="cadetblue"
-            />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CustomButton
+                label={"Save"}
+                onClick={handleCreateRecipe}
+                style={{ width: "20%", height: "50px" }}
+                backgroundChangeColor="white"
+                backgroundColor={COLORS.primaryBlue}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       )}
