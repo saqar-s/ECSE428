@@ -17,21 +17,21 @@ def format_recipe(recipe):
 
 @recipe.route('/createRecipe', methods=['POST'])
 def create_recipe():
+    print("ingredients_list")
     data = request.json
     name = data.get('name')
-    servingSize = data.get('servingSize')
-    origin = data.get('origin')
-    category = data.get('category')
+    ingredients_list = data.get('ingredients')
     description = data.get('description')
 
     # Find the user
     # user = User.query.filter_by(email=email).first()
-
-    if (not (name and not name.isspace())):
-        return jsonify({'message': 'The recipe must have a name'}), 400
+    
+    # if (not (name and not name.isspace())):
+    #     return jsonify({'message': 'The recipe must have a name'}), 400
     
     #Create recipe
-    new_recipe = Recipe(name=name, servingSize=servingSize, origin=origin, category=category, description=description)
+    ingredients = [ingredient.strip() for ingredient in ingredients_list.split(',')]
+    new_recipe = Recipe(name=name, ingredients=ingredients, description=description)
     db.session.add(new_recipe)
     db.session.commit()
 
