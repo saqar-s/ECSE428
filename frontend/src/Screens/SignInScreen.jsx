@@ -31,7 +31,6 @@ const SignInScreen = () => {
   };
 
   const handleSignUp = () => {
-    console.log("Sign Up");
     navigate("/signup");
   };
 
@@ -42,7 +41,10 @@ const SignInScreen = () => {
 
       if (result && result.status === 200) {
         const { name, age } = result.response.data;
-        navigate("/account", { state: { username, name, age } });
+        localStorage.setItem("username", username);
+        localStorage.setItem("user", name);
+        localStorage.setItem("age", age);
+        navigate("/account");
         console.log(result.message);
       } else if (result.status === 404) {
         setEmaiError(result.message);
