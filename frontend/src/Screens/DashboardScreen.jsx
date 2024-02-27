@@ -51,15 +51,14 @@ const DashboardScreen = () => {
         <SubTitleText text={"Check out the latest recipes shared by our community!"} />
       </div>
       <CustomButton label={"Refresh Recipes"} onClick={fetchAllRecipes} />
-      <div style={{ marginTop: "2rem", display: "flex", alignItems: "center" }}>
+      <div style={{ marginTop: "2rem", width: "50%", display: "flex", alignItems: "center" }}>
         <TextInput
           label={"Enter Email to Filter Recipes"}
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
-          style={{ width: "100%", height: "40px", lineHeight: "normal", padding: "8px" }}
+          style={{ width: "100%", height: "40px" }}
         />
-
-        <CustomButton label={"View Recipes"} onClick={handleViewByEmail} style={{ marginLeft: "10px" }} />
+        <CustomButton label={"View Recipes"} onClick={handleViewByEmail} style={{ marginLeft: "10px", width: "50%", height: "40px", marginTop: "60px" }} />
       </div>
       <div>
         {recipes.map((recipe) => (
