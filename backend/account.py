@@ -91,12 +91,24 @@ def modify_user():
 
         if not user:
             return jsonify({'message': 'User does not exist'}), 404
+        
+        if '@' not in email or '.' not in email:
+            return jsonify({'message': 'Invalid email address'}), 400
+        
+        if age < 0 or age > 1000:
+            return jsonify({'message': 'Invalid age'}), 400
+        
+        if name == '':
+            return jsonify({'message': 'Name cannot be blank'}), 400
+        
+        if int(age) != age:
+            return jsonify({'message': 'Age must be an integer'}), 400
 
         session['user_email'] = user.email
         user.name = name
         user.age = age
         db.session.commit()
-        return jsonify({'message': 'User update successful'}), 200
+        return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
