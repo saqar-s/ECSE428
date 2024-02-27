@@ -12,6 +12,10 @@ CORS(app, supports_credentials=True, methods=["GET", "HEAD", "POST", "OPTIONS", 
 db.init_app(app)
 migrate.init_app(app, db)
 
+# Create all database tables
+with app.app_context():
+    db.create_all()
+
 app.register_blueprint(account)
 
 if __name__ == '__main__':

@@ -24,6 +24,18 @@ def register_user():
     password = data.get('password')
     age = data.get('age')
 
+    # Check for empty fields
+    if not all([name, email, password, age]):
+        return jsonify({'message': 'All fields are required'}), 400
+
+    # Check email validity
+    if '@' not in email or '.' not in email:
+        return jsonify({'message': 'Invalid email address'}), 400
+    
+    # Check age validity
+    if age < 0 or age > 1000:
+        return jsonify({'message': 'Invalid age'}), 400
+    
     # Check if email already exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
