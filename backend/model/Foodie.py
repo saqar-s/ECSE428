@@ -2,7 +2,7 @@
 #This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!
 # line 7 "model.ump"
 # line 91 "model.ump"
-from User import User
+from model import User
 
 class Foodie(User):
     #------------------------

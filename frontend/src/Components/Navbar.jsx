@@ -11,7 +11,6 @@ import { COLORS, FONTS } from "../GLOBAL";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useHistory } from "react-router-dom";
-import { isLoggedIn, removeToken } from "../Auth";
 
 const NavBar = () => {
   const pages = [
@@ -36,11 +35,14 @@ const NavBar = () => {
   });
 
   const handleAccountClick = () => {
-    if (isLoggedIn()) {
-      return "/account";
+    const loggedInUser = localStorage.getItem("username");
+    let result;
+    if (loggedInUser !== null) {
+      result = "/account";
     } else {
-      return "/signin";
+      result = "/signin";
     }
+    return result;
   };
   const accountPath = handleAccountClick();
   return (
