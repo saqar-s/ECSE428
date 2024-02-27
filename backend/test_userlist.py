@@ -19,4 +19,4 @@ class TestSearchUsers(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-    # Unit test 1: Success User Registration (Normal Flow)
+    # Unit test 1: Search User list Success (Normal Flow)
