@@ -46,6 +46,7 @@ const PostScreen = () => {
         name: recipeName,
         ingredients: ingredients,
         description: description,
+        email: localStorage.get("username")
       };
 
       const result = await createRecipe(userData);

@@ -47,8 +47,7 @@ class Recipe(db.Model):
     name = db.Column(db.String(100), nullable=False)
     ingredients = db.Column(db.ARRAY(db.String(100)), nullable=False)
     description = db.Column(db.String(10000), nullable=False)
-    # user = db.Columns(db.Integer, db.ForeignKey('user.email'))
-    # user = db.relationship('User', back_populates='recipes')
+    email = db.Column(db.String(100), nullable=False)
 
   
 

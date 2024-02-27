@@ -22,16 +22,12 @@ def create_recipe():
     name = data.get('name')
     ingredients_list = data.get('ingredients')
     description = data.get('description')
+    email = data.get('email')
 
-    # Find the user
-    # user = User.query.filter_by(email=email).first()
-    
-    # if (not (name and not name.isspace())):
-    #     return jsonify({'message': 'The recipe must have a name'}), 400
     
     #Create recipe
     ingredients = [ingredient.strip() for ingredient in ingredients_list.split(',')]
-    new_recipe = Recipe(name=name, ingredients=ingredients, description=description)
+    new_recipe = Recipe(name=name, ingredients=ingredients, description=description, email=email)
     db.session.add(new_recipe)
     db.session.commit()
 
