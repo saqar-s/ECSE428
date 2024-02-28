@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from account import account
+from recipe import recipe
 from models import db, migrate
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ with app.app_context():
     db.create_all()
 
 app.register_blueprint(account)
+app.register_blueprint(recipe)
 
 if __name__ == '__main__':
     app.run(debug=True , port=8000, use_reloader=False)

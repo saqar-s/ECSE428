@@ -6,8 +6,10 @@ from app import app, db
 
 class TestDeleteUser(unittest.TestCase):
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['SESSION_TYPE'] = 'filesystem'
+        app.config['SECRET_KEY'] = 'some string'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://recipe_database_gp57_user:zKPQLZ5Al0DI2lE3y5z8yPfcdZTr9Scn@dpg-cn42fb7109ks73eskttg-a.oregon-postgres.render.com/recipe_database_gp57'
+
         self.app = app.test_client()
         
         # Create all database tables
