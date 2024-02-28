@@ -6,14 +6,14 @@ from models import db,User
 account = Blueprint('account', __name__)
 
 CORS(account)
-"""
+
 def format_user(user):
     return {
         "name": user.name,
         "email": user.email,
         "age": user.age
     }
-"""
+
 
 @account.route('/register', methods=['POST'])
 def register_user():
@@ -95,7 +95,7 @@ def modify_user():
         if '@' not in email or '.' not in email:
             return jsonify({'message': 'Invalid email address'}), 400
         
-        if age < 0 or age > 1000:
+        if int(age) < 0 or int(age) > 1000:
             return jsonify({'message': 'Invalid age'}), 400
         
         if name == '':
