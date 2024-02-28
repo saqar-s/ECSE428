@@ -20,6 +20,7 @@ import {
   Snackbar
 } from "@mui/material";
 import { createRecipe } from "../APIcalls/RecipeCalls";
+import { deleteRecipe } from "../APIcalls/RecipeCalls";
 
 const PostScreen = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -29,6 +30,7 @@ const PostScreen = () => {
   // const [passwordError, setPasswordError] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [recipeNameToDelete, setRecipeNameToDelete] = React.useState("");
 
 
   const handleRecipeNameChange = (text) => {
@@ -80,11 +82,35 @@ const PostScreen = () => {
     }
     setOpen(false);
   };
-
   const handleModalClick = () => {
     setDialogOpen(!dialogOpen);
     console.log();
+  }
+
+  const handleNameForDelete = (text) => {
+    setRecipeNameToDelete(text);
   };
+
+  const handleDeleteRecipe = async () => {
+    try {
+      const userData = {
+        name : recipeNameToDelete,
+      };
+  
+      const result = await deleteRecipe(userData);
+      console.log(`this is what result is giving me ${result} and the status is ${result.status}`);
+      if (result && result.status === 200) {
+        recipeNameToDelete("");
+      }
+      else {
+        console.log(`something bad is hapenning bobby ${recipeNameToDelete}`)
+      }
+    }
+    catch (error) {
+      console.log('error in the PostScreen file')
+    }
+  }
+
   return (
     <div
       style={{
@@ -100,9 +126,20 @@ const PostScreen = () => {
       </div>
       <CustomButton
         label={"Make a post"}
-        style={{ width: "30%" }}
+        style={{ width: "30%", marginBottom: 6 }}
         onClick={handleModalClick}
       />
+      <TextInput
+          label={"Delete a Recipe"}
+          text={recipeNameToDelete}
+          onClick={handleNameForDelete}
+          style={{ marginBottom: 6 }}
+        />
+        <CustomButton
+          label={"Delete Recipe"}
+          onClick={handleDeleteRecipe}
+          style={{ width: "10%", height: "40px", marginBottom: 6 }}
+        />
       {dialogOpen && (
         <Dialog
           open={dialogOpen}
