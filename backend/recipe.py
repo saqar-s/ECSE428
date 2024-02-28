@@ -8,10 +8,10 @@ CORS(recipe)
 def format_recipe(recipe):
     return {
         "name": recipe.name,
-        "servingSize": recipe.servingSize,
+        "ingredients": recipe.ingredients,
         "description": recipe.description,
-        "origin": recipe.origin,
-        "category": recipe.category
+        "email": recipe.email
+
         
     }
 
@@ -31,6 +31,7 @@ def create_recipe():
     db.session.add(new_recipe)
     db.session.commit()
 
+<<<<<<< HEAD
     return format_recipe(new_recipe)
 
 @recipe.route('/deleteRecipe', methods=['DELETE'])
@@ -53,3 +54,6 @@ def delete_recipe():
     except Exception as e: 
         return jsonify({'message': str(e)}), 500
     
+=======
+    return format_recipe(new_recipe)
+>>>>>>> main
