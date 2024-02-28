@@ -31,7 +31,6 @@ def create_recipe():
     db.session.add(new_recipe)
     db.session.commit()
 
-<<<<<<< HEAD
     return format_recipe(new_recipe)
 
 @recipe.route('/deleteRecipe', methods=['DELETE'])
@@ -49,11 +48,8 @@ def delete_recipe():
         else: 
             return jsonify({'message': 'The recipe with the given name cannot be found'}), 400
 
-        return format_recipe(deleted_recipe) 
+        return jsonify({'message': 'The recipe has been deleted'}), 200
     
     except Exception as e: 
         return jsonify({'message': str(e)}), 500
     
-=======
-    return format_recipe(new_recipe)
->>>>>>> main

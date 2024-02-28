@@ -38,7 +38,7 @@ export const createRecipe = async (data) => {
 
 export const deleteRecipe = async (data) => {
   try {
-    const response = await api.delete('/deleteRecipe', data);
+    const response = await api.delete(`/deleteRecipe`, data);
     return { status: response.status, message: "Recipe has been deleted" };
   } catch (error) {
     if (error.response) {

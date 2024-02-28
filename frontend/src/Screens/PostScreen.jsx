@@ -107,7 +107,7 @@ const PostScreen = () => {
       }
     }
     catch (error) {
-
+      console.log('error in the PostScreen file')
     }
   }
 
