@@ -18,6 +18,7 @@ const NavBar = () => {
     { name: "Make a post", path: "/post" },
     { name: "Calendar", path: "/calendar" },
     { name: "Favorites", path: "/favorites" },
+    { name: "User List", path: "/userlist" },
   ];
 
   const theme = createTheme({

@@ -8,6 +8,7 @@ import {
   UserAccountScreen,
   PostScreen
 } from "./Screens";
+import UserListScreen from "./Screens/UserListScreen";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signup" element={<SignUpScreen />} />
         <Route path="/account" element={<UserAccountScreen />} />
         <Route path="/post" element={<PostScreen />} />
+        <Route path="/userlist" element={<UserListScreen />} />
       </Routes>
     </BrowserRouter>
   );
