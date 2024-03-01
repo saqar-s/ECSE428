@@ -2,6 +2,7 @@ from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
 from models import db,Recipe
 
+
 recipe = Blueprint('recipe', __name__)
 
 CORS(recipe)
@@ -12,7 +13,8 @@ def format_recipe(recipe):
         "description": recipe.description,
         "origin": recipe.origin,
         "category": recipe.category,
-        "image_url": recipe.image_url 
+        "image": recipe.image,
+        
         
     }
 
@@ -32,11 +34,13 @@ def create_recipe():
     
     #Create recipe
     ingredients = [ingredient.strip() for ingredient in ingredients_list.split(',')]
-    new_recipe = Recipe(name=name, ingredients=ingredients, description=description)
+    image = data.get('image')
+    new_recipe = Recipe(name=name, ingredients=ingredients, description=description, image=image)
+    
     db.session.add(new_recipe)
     db.session.commit()
 
-    #return format_recipe(new_recipe)
+    return format_recipe(new_recipe)
 
 # Add picture to recipe
 #https://healthyfitnessmeals.com/wp-content/uploads/2021/02/Honey-garlic-chicken-meal-prep-9.jpg 

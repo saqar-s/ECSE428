@@ -4,6 +4,7 @@ import {
   SubTitleText,
   LargeTextInputWhite,
   TextInput,
+  FileInput,
   CustomButton,
 } from "../Components";
 import { COLORS, FONTS } from "../GLOBAL";
@@ -51,6 +52,7 @@ const PostScreen = () => {
       const result = await createRecipe(userData);
       console.log(result)
       console.log(ingredients)
+      
 
       if (result && result.status === 200) {
         setRecipeName("");
@@ -129,7 +131,7 @@ const PostScreen = () => {
           </DialogTitle>
           <DialogContent dividers>
             
-            <TextInput
+            <FileInput
               label={"Choose a picture for your post"}
               width={"100%"}
               style={{ marginBottom: 2 }}
