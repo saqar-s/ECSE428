@@ -40,6 +40,7 @@ class Recipe(db.Model):
         - description: varchar(10000) NOT NULL
         - image: BLOB NOT NULL (to store image file as binary data)
         - foodie: User NOT NULL
+        - image: LargeBinary NULLABLE
 
     Routes:
         - create_recipe() --> POST (/createRecipe)
@@ -48,10 +49,8 @@ class Recipe(db.Model):
     name = db.Column(db.String(100), nullable=False)
     ingredients = db.Column(db.ARRAY(db.String(100)), nullable=False)
     description = db.Column(db.String(10000), nullable=False)
-    ##store an image file in the data base
-    image = db.Column(db.BLOB, nullable=False)  # Changed to BLOB to store binary data
-    # user = db.Columns(db.Integer, db.ForeignKey('user.email'))
-    # user = db.relationship('User', back_populates='recipes')
+    email = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.LargeBinary, nullable=True)  # Changed to LargeBinary to store binary data
 
   
 
