@@ -10,7 +10,6 @@ CORS(recipe)
 
 @recipe.route('/createRecipe', methods=['POST'])
 def create_recipe():
-    print("ingredients_list")
     data = request.json
     name = data.get('name')
     ingredients_list = data.get('ingredients')
@@ -19,11 +18,15 @@ def create_recipe():
     image_data_base64 = data.get('image')
      # Decode Base64-encoded image data back to bytes
     image = base64.b64decode(image_data_base64)
+    # log the image data
     
     try:
         # Check for empty fields
         if not all([name, ingredients_list, description, email]):
+            # Return error message
             return jsonify({'message': 'All fields are required'}), 400
+        
+        
         
         # Check email validity
         if '@' not in email or '.' not in email:

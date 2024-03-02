@@ -9,7 +9,6 @@ import { COLORS, FONTS } from "../GLOBAL";
 
 const FileInput = ({
   label,
-  text,
   helpertext,
   hasError,
   onClick,
