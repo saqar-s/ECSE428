@@ -75,3 +75,53 @@ export const logoutUser = async () => {
     throw error.response.data;
   }
 };
+
+export const modifyUserDetails = async (data) => {
+  try {
+    //const response = await api.post("/modify", data);
+    const response = await api.put('/modify', data)
+    return {
+      response: response,
+      status: response.status,
+      message: "User details modified successfully",
+    };
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      let errorMessage;
+      switch (status) {
+        /** 
+        case 401:
+          errorMessage = "User not logged in";
+          break;*/
+        default:
+          errorMessage = "Failed to modify user details";
+          break;
+      }
+      return { status, message: errorMessage };
+    } else {
+      return { status: 500, message: "Internal server error" };
+    }
+  }
+};
+
+export const getUserList = async () => {
+  try {
+    const response = await api.get("/searchuser");
+    //response.then(console.log(response.data));
+    // console.log("heloo")
+    // console.log((await response).data)
+    return response.data; //return user names
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      let errorMessage;
+
+      errorMessage = "Data base was empty of Users!"
+
+      return { status, message: errorMessage };
+    } else {
+      return { status: 500, message: "Internal server error" };
+    }
+  }
+};

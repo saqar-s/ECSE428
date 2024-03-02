@@ -6,6 +6,7 @@ from models import db,User
 account = Blueprint('account', __name__)
 
 CORS(account)
+
 def format_user(user):
     return {
         "name": user.name,
@@ -22,6 +23,18 @@ def register_user():
     password = data.get('password')
     age = data.get('age')
 
+    # Check for empty fields
+    if not all([name, email, password, age]):
+        return jsonify({'message': 'All fields are required'}), 400
+
+    # Check email validity
+    if '@' not in email or '.' not in email:
+        return jsonify({'message': 'Invalid email address'}), 400
+    
+    # Check age validity
+    if age < 0 or age > 1000:
+        return jsonify({'message': 'Invalid age'}), 400
+    
     # Check if email already exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
@@ -32,7 +45,7 @@ def register_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return format_user(new_user)
+    return jsonify({'message': 'Registration successful'}), 201
 
 
 @account.route('/login', methods=['POST'])
@@ -52,7 +65,7 @@ def login_user():
 
         session['user_email'] = user.email
 
-        return format_user(user)
+        return jsonify({'message': 'Login successful'}), 201
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
@@ -64,3 +77,94 @@ def logout_user():
     # Clear the session
     session.clear()
     return jsonify({'message': 'Logout successful'}), 200
+
+
+@account.route('/modify', methods=['PUT'])
+def modify_user():
+    try:
+        data = request.json
+        email = data.get('email')
+        name = data.get('name')
+        age = data.get('age')
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return jsonify({'message': 'User does not exist'}), 404
+        
+        if '@' not in email or '.' not in email:
+            return jsonify({'message': 'Invalid email address'}), 400
+        
+        if int(age) < 0 or int(age) > 1000:
+            return jsonify({'message': 'Invalid age'}), 400
+        
+        if name == '':
+            return jsonify({'message': 'Name cannot be blank'}), 400
+        
+        if int(age) != age:
+            return jsonify({'message': 'Age must be an integer'}), 400
+
+        session['user_email'] = user.email
+        user.name = name
+        user.age = age
+        db.session.commit()
+        return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+# Due to current testing issues, the current delete function requires the email and password.
+@account.route('/delete', methods=['DELETE'])
+def delete_account():
+    try:
+        #Get email and password
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        
+        user = User.query.filter_by(email=email).first()
+        # Check if email does not exist
+        if not user:
+            return jsonify({'message': 'Not an active account'}), 400
+        #Check if password is correct
+        if user.password != password:
+                return jsonify({'message': 'Invalid password'}), 401
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deletion successful'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+# Final functionality of the user deletion feature will only require the user to be logged in.
+"""
+@user.route('/delete', methods=['DELETE'])
+def delete_user():
+    if session.get('user_email') == None:
+        return 'Please log in to delete an account'
+    else:
+        try:
+            user = User.query.filter_by(email=session.get('user_email')).first()
+            if not user:
+                return jsonify({'message': 'Not an active account'}), 400
+            db.session.delete(user)
+            db.session.commit()
+        except:
+            return 'Error, unable to delete account, please contact an admin...'
+
+"""
+
+@account.route('/searchuser', methods=['GET'])
+def search_user():
+    # email = session['user_email']
+    # existing_user = User.query.filter_by(email = session['user_email']).first()
+    # if not existing_user:
+    #     session.clear()
+    #     return jsonify({'message': 'Please log In again'}), 405
+    users = User.query.all()
+    if not users:
+        return jsonify({'message': 'There are no users in the database'}), 406
+    newlist = []
+    for user in users:
+        newlist.append(user.name)
+    tup = tuple(newlist)
+    return jsonify(tup),203

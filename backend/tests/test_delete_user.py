@@ -20,24 +20,57 @@ class TestDeleteUser(unittest.TestCase):
         with app.app_context():
             db.session.remove()
             db.drop_all()
-        
-   # Unit test 1: Successful delete recipe (Normal Flow)
-    def test_delete_recipe(self):
-        data = {
-            "name": "Honey Garlic Chicken",
-            
-        }
-        response = self.app.delete('/deleteRecipe', json=data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, {'message': 'User deleted successfully'})
 
-    # Unit test 2: Unsuccessful delete recipe (Error Flow)
+    # Unit test 1: Successful User Deletion (Normal Flow)
+    def test_delete_new_user(self):
         data = {
-            "email": ""
+            'name': 'JCBEES',
+            'email': 'JCBEES@gmail.com',
+            'password': 'Qwerty123',
+            'age': 23
         }
-        response = self.app.delete('/deleteRecipe', json=data)
+        response1 = self.app.post('/register', json=data)
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response1.json['message'], 'Registration successful')
+        
+        response2 = self.app.delete('/delete', json=data)
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.json['message'], 'User deletion successful')
+
+    # Unit test 2: User Delete with Non-Existent Email
+    def test_delete_nonexist_user(self):
+        # Delete user
+        data = {
+            'name': 'JCBEES1',
+            'email': 'JCBEES@gmail.com',
+            'password': 'Qwerty1234',
+            'age': 24
+        }
+        response = self.app.delete('/delete', json=data)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json, {'message': 'The recipe with the given name cannot be found'})
+        self.assertEqual(response.json['message'], 'Not an active account')
 
-    # Unit test 3: Unsuccessful delete recipe (Error Flow)
+    # Unit test 3: User Deletion with wrong password
+    def test_delete_user_wrong_password(self):
+        # Create user
+        data = {
+            'name': 'JCBEES',
+            'email': 'JCBEES@gmail.com',
+            'password': 'Qwerty123',
+            'age': 23
+        }
+        response1 = self.app.post('/register', json=data)
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response1.json['message'], 'Registration successful')
         
+        # Delete user with wrong password
+        badData = {
+            'email': 'JCBEES@gmail.com',
+            'password': 'BadBadNotGood'
+        }
+        response2 = self.app.delete('/delete', json=badData)
+        self.assertEqual(response2.status_code, 401)
+        self.assertEqual(response2.json['message'], 'Invalid password')
+
+if __name__ == '__main__':
+    unittest.main()

@@ -44,17 +44,27 @@ const SignUpScreen = () => {
 
   const handleSignUp = async () => {
     try {
+      const ageAsInt = parseInt(age);
+
+      if (isNaN(ageAsInt)) {
+        console.error("Age must be a valid integer.");
+        return;
+      }
+
       const userData = {
         name: name,
         email: username,
         password: password,
-        age: age,
+        age: ageAsInt,
       };
 
       const result = await registerUser(userData);
 
-      if (result && result.status === 200) {
-        navigate("/account", { state: { username, name, age } });
+      if (result && result.status === 201) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("user", name);
+        localStorage.setItem("age", age);
+        navigate("/account");
       } else if (result.status === 400) {
         setEmailError(result.message);
       } else {
@@ -139,7 +149,7 @@ const SignUpScreen = () => {
         />
       </div>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCLose}>
-        <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
+        <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
           {error}
         </Alert>
       </Snackbar>
