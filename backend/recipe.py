@@ -26,8 +26,7 @@ def create_recipe():
             # Return error message
             return jsonify({'message': 'All fields are required'}), 400
         
-        
-        
+
         # Check email validity
         if '@' not in email or '.' not in email:
             return jsonify({'message': 'Invalid email address'}), 400

@@ -37,28 +37,3 @@ export const createRecipe = async (data) => {
 };
 
 
-export const addPicture = async (data) => {
-  try {
-    const response = await api.put('/addPicture', data);
-    return { status: response.status, message: "Added picture to recipe successfully" };
-  }
-  catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-      let errorMessage;
-
-      switch (status) {
-        case 400:
-          errorMessage = "The recipe must have a name";
-          break;
-        default:
-          errorMessage = "Add picture failed";
-          break;
-      }
-
-      return { status, message: errorMessage };
-    } else {
-      return { status: 500, message: "Internal server error" };
-    }
-  }
-};
