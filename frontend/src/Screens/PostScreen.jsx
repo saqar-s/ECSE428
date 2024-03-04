@@ -43,8 +43,12 @@ const PostScreen = () => {
   const handleCreateRecipe = async () => {
     try {
       const imageFile = document.getElementById("file-input").files[0];
-      const imageData = await readFileAsBase64(imageFile); // Convert image to Base64
-  
+      let imageData = null;
+
+      if (imageFile) {
+      imageData = await readFileAsBase64(imageFile); // Convert image to Base64
+      }
+      
       const userData = {
         name: recipeName,
         ingredients: ingredients,
