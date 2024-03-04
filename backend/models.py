@@ -38,7 +38,6 @@ class Recipe(db.Model):
         - name: varchar(100) NOT NULL
         - ingredients: Array[Strings] NOT NULL
         - description: varchar(10000) NOT NULL
-        - image: BLOB NOT NULL (to store image file as binary data)
         - foodie: User NOT NULL
         - image: LargeBinary NULLABLE
 
