@@ -45,13 +45,32 @@ class Recipe(db.Model):
         - create_recipe() --> POST (/createRecipe)
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), unique= True, nullable=False)
     ingredients = db.Column(db.ARRAY(db.String(100)), nullable=False)
     description = db.Column(db.String(10000), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     image = db.Column(db.LargeBinary, nullable=True)  # Changed to LargeBinary to store binary data
 
-  
 
     def __repr__(self):
         return f"Recipe('{self.name}')"
+
+class CalendarEvent(db.Model):
+    """
+    Relation Name: Calendar
+
+    Attributes:
+        - id: Integer Primary Key
+        - date: Date NOT NULL
+        - recipe: Recipe NOT NULL
+
+    Routes:
+        - addToCalendar() --> POST (/addToCalendar)
+    """
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date = db.Column(db.Date, nullable=False)
+    recipeName = db.Column(db.String(100), db.ForeignKey('recipe.name'), nullable=False)
+    recipe = db.relationship('Recipe', backref=db.backref('calendar_events', lazy=True))
+
+    def __repr__(self):
+        return f"Calendar Event('{self.date}')"
