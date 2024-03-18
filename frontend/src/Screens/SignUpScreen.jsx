@@ -44,16 +44,23 @@ const SignUpScreen = () => {
 
   const handleSignUp = async () => {
     try {
+      const ageAsInt = parseInt(age);
+
+      if (isNaN(ageAsInt)) {
+        console.error("Age must be a valid integer.");
+        return;
+      }
+
       const userData = {
         name: name,
         email: username,
         password: password,
-        age: age,
+        age: ageAsInt,
       };
 
       const result = await registerUser(userData);
 
-      if (result && result.status === 200) {
+      if (result && result.status === 201) {
         localStorage.setItem("username", username);
         localStorage.setItem("user", name);
         localStorage.setItem("age", age);

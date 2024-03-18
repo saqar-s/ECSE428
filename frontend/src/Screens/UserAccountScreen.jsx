@@ -60,6 +60,7 @@ const UserAccountScreen = () => {
   const handleLogout = async () => {
     try {
       const response = await logoutUser();
+      localStorage.clear();
       console.log(response);
     } catch (error) {
       console.error("Could not logout: ", error);
