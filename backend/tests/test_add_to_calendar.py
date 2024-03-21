@@ -33,7 +33,8 @@ class TestAddToCalendar(unittest.TestCase):
 
         data_calendar = {
             'name': 'recipe 1',
-            'date': '2024-04-12'
+            'date': '2024-04-12',
+            'email': 'random@gmail.com'
         }
         response = self.app.post('/addToCalendar', json=data_calendar)
         self.assertEqual(response.status_code, 201)
@@ -49,7 +50,8 @@ class TestAddToCalendar(unittest.TestCase):
         }
         self.app.post('/createRecipe', json=data_recipe)
         data = {
-            'date': '2024-04-12'
+            'date': '2024-04-12',
+            'email': 'random@gmail.com'
         }
         response = self.app.post('/addToCalendar', json=data)
         self.assertEqual(response.status_code, 400)
@@ -65,7 +67,8 @@ class TestAddToCalendar(unittest.TestCase):
         }
         self.app.post('/createRecipe', json=data_recipe)
         data_recipe = {
-            'name': 'recipe 3'
+            'name': 'recipe 3',
+            'email': 'random@gmail.com'
         }
         response = self.app.post('/addToCalendar', json=data_recipe)
         self.assertEqual(response.status_code, 400)
@@ -75,7 +78,8 @@ class TestAddToCalendar(unittest.TestCase):
     def test_add_to_calendar_non_existing_recipe(self):
         data_calendar = {
             'name': 'non-existent',
-            'date': '2024-04-12'
+            'date': '2024-04-12',
+            'email': 'random@gmail.com'
         }
         response = self.app.post('/addToCalendar', json=data_calendar)
         self.assertEqual(response.status_code, 404)
@@ -92,7 +96,8 @@ class TestAddToCalendar(unittest.TestCase):
         self.app.post('/createRecipe', json=data_recipe)
         data_first = {
             'name': 'recipe 4',
-            'date': '2024-04-12'
+            'date': '2024-04-12',
+            'email': 'random@gmail.com'
         }
         self.app.post('/addToCalendar', json=data_first)
         response = self.app.post('/addToCalendar', json=data_first)
