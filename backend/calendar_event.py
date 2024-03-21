@@ -13,14 +13,18 @@ def addToCalendar():
     data = request.json
     recipeName = data.get('name')
     date_str = data.get('date')
+    email = data.get('email')
 
     try:
         # Check for empty fields
-        if not all([recipeName, date_str]):
+        if not all([recipeName, date_str, email]):
             return jsonify({'message': 'All fields are required'}), 400
 
         # Check date validity
         date = datetime.strptime(date_str, '%Y-%m-%d')
+
+        if '@' not in email or '.' not in email:
+            return jsonify({'message': 'Invalid email address'}), 400
 
         # Check if recipe exists
         recipe = Recipe.query.filter_by(name=recipeName).first()
@@ -31,7 +35,7 @@ def addToCalendar():
         if existing_event:
             return jsonify({'error': 'Recipe already added to the calendar for this date'}), 400
         # Add to calendar
-        new_event = CalendarEvent(date=date, recipe=recipe)
+        new_event = CalendarEvent(date=date, recipe=recipe, email=email)
         db.session.add(new_event)
         db.session.commit()
 
