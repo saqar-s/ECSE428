@@ -98,3 +98,6 @@ class TestAddToCalendar(unittest.TestCase):
         response = self.app.post('/addToCalendar', json=data_first)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['error'], 'Recipe already added to the calendar for this date')
+
+if __name__ == '__main__':
+    unittest.main()

@@ -69,6 +69,7 @@ class CalendarEvent(db.Model):
     date = db.Column(db.Date, nullable=False)
     recipeName = db.Column(db.String(100), db.ForeignKey('recipe.name'), nullable=False)
     recipe = db.relationship('Recipe', backref=db.backref('calendar_events', lazy=True))
+    email = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return f"Calendar Event('{self.date}')"
