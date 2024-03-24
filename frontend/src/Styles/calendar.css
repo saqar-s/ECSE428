@@ -1,0 +1,39 @@
+.calendar-container {
+    background-color: #ffffff; /* Set the background color to white */
+
+}
+.fc .fc-day-today {
+    background-color: #f0f0f0 !important;
+  }
+  
+  .fc-daygrid-day.fc-current-date:hover {
+    background-color: #f0f0f0 !important;
+  }
+.fc .fc-daygrid-day-top {
+    font-size: 20px;
+  }
+  
+.fc .fc-daygrid-day {
+    background-color: white;
+  }
+  
+.fc .fc-daygrid-day-number {
+    font-size: 20px;
+  }
+  
+.fc .fc-daygrid-button-inner {
+    color: black;
+  }
+  
+.fc .fc-toolbar-title {
+    font-size: 24px;
+  }
+  .fc .fc-button-prev {
+    background-color: gray;
+    color: white;
+  }
+  
+  .fc .fc-button-next {
+    background-color: gray;
+    color: white;
+  }
