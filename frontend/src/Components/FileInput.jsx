@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import {
-  FormControl,
-  FormLabel,
-  Button,
-  Typography,
-} from "@mui/material";
+import { FormLabel, Button, Typography, styled } from "@mui/material";
 import { COLORS, FONTS } from "../GLOBAL";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 const FileInput = ({
   label,
@@ -13,75 +9,114 @@ const FileInput = ({
   hasError,
   onClick,
   style,
-  inputHeight = "50px",
-  isMultiline = false,
-  width = "50%",
-  labelColor = COLORS.Black,
-}) => {
-  const [fileName, setFileName] = useState("");
-  const [error, setError] = useState("");
 
+  width = "50%",
+}) => {
+  const [isUploaded, setUploaded] = useState(false);
+  const [error, setError] = useState("");
+  const [fileReader, setFileReader] = useState("");
+
+  let file;
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
+    file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUploaded(true);
+      setFileReader(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    setUploaded(true);
     const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
 
     if (file && allowedTypes.includes(file.type)) {
-      setFileName(file.name);
       if (onClick && typeof onClick === "function") {
         onClick(file);
       }
-      setError(""); // Clear any previous error message
+      setError("");
     } else {
-      // Reset the file input and display an error message
       event.target.value = null;
-      setFileName("");
+
       setError("Please choose a valid image file (JPEG, PNG, GIF).");
     }
   };
-
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
   return (
-    <FormControl sx={{ width: width, ...style }}>
+    <>
       <FormLabel
         sx={{
-          color: labelColor,
+          color: COLORS.White,
           fontFamily: FONTS.InriaSerif,
           fontSize: 16,
           marginBottom: 0.5,
         }}
+        helpertext={error}
       >
         {label}
       </FormLabel>
-      <input
-        type="file"
-        id="file-input"
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-      <Button 
-        component="label"
-        htmlFor="file-input"
-        sx = {{
-          backgroundColor: COLORS.White,
-          borderRadius: 4,
-          color: COLORS.Black,
-          textTransform: "none",
-          "&:hover": { background: COLORS.PrimaryPink, border: "1px solid #000000",},
-          height: isMultiline ? "auto" : inputHeight,
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          height: "100px",
+          margin: 6,
         }}
       >
-        {fileName ? fileName : "Choose File"}
-      </Button>
-      {error && (
-        <Typography variant="caption" sx={{ color: "red" }}>
-          {error}
-        </Typography>
-      )}
-      {hasError && (
-        <Typography variant="caption" sx={{ color: "red" }}>
-          {helpertext}
-        </Typography>
-      )}
-    </FormControl>
+        <Button
+          sx={{
+            background: isUploaded ? `url(${fileReader})` : COLORS.White,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            borderRadius: 6,
+            width: "200px",
+            textTransform: "none",
+            "&:hover": isUploaded ? `url(${fileReader})` : COLORS.White,
+          }}
+          component="label"
+        >
+          <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <>
+              <AddAPhotoIcon
+                sx={{
+                  color: COLORS.Black,
+                  opacity: isUploaded ? 1 : 0.6,
+                  fontSize: 34,
+                }}
+              />
+              <Typography
+                color={COLORS.Black}
+                fontSize={16}
+                textTransform={"none"}
+                fontFamily={FONTS.InriaSerif}
+                sx={{ opacity: isUploaded ? 1 : 0.6 }}
+              >
+                {isUploaded
+                  ? "Click to change photo"
+                  : "Click to upload a photo"}
+              </Typography>
+            </>
+          </div>
+        </Button>
+      </div>
+    </>
   );
 };
 
