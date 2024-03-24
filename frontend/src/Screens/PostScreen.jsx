@@ -18,7 +18,7 @@ import {
   Typography,
   colors,
   Alert,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import { createRecipe } from "../APIcalls/RecipeCalls";
 
@@ -29,7 +29,6 @@ const PostScreen = () => {
   const [description, setDescription] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
-
 
   const handleRecipeNameChange = (text) => {
     setRecipeName(text);
@@ -46,9 +45,9 @@ const PostScreen = () => {
       let imageData = null;
 
       if (imageFile) {
-      imageData = await readFileAsBase64(imageFile); // Convert image to Base64
+        imageData = await readFileAsBase64(imageFile); // Convert image to Base64
       }
-      
+
       const userData = {
         name: recipeName,
         ingredients: ingredients,
@@ -56,11 +55,11 @@ const PostScreen = () => {
         email: localStorage.getItem("username"),
         image: imageData, // Include image data in the JSON data
       };
-  
+
       const result = await createRecipe(userData);
 
       console.log(result);
-  
+
       if (result && result.status === 201) {
         setRecipeName("");
         setIngredients("");
@@ -74,7 +73,7 @@ const PostScreen = () => {
       setError("Error creating recipe:", error.message);
     }
   };
-  
+
   // Function to read the uploaded image file and convert it to Base64 string
   const readFileAsBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -143,7 +142,6 @@ const PostScreen = () => {
             Create your post
           </DialogTitle>
           <DialogContent dividers>
-            
             <FileInput
               label={"Choose a picture for your post"}
               width={"100%"}
@@ -190,10 +188,10 @@ const PostScreen = () => {
         </Dialog>
       )}
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCLose}>
-      <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
-        {error} 
-      </Alert>
-    </Snackbar>
+        <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
