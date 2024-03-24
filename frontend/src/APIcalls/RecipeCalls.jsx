@@ -35,3 +35,34 @@ export const createRecipe = async (data) => {
     }
   }
 };
+
+//add a picture to the recipe
+export const addPicture = async (data) => {
+  try {
+    const response = await api.put('/addPicture', data);
+    return { status: response.status, message: "Added picture successfully" };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};
+
+//delete a recipe
+export const deleteRecipe = async (data) => {
+  try {
+    const response = await api.delete('/deleteRecipe', { data });
+    return { status: response.status, message: "Deleted recipe successfully" };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};
+
+//get the recipes from the backend
+export const getRecipes = async () => {
+  try {
+    const response = await api.get('/getRecipes');
+    return { status: response.status, data: response.data };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};
+

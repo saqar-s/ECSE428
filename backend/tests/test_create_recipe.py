@@ -1,5 +1,6 @@
 import unittest
 import sys
+import base64
 sys.path.append('../')
 from app import app, db 
 
@@ -24,11 +25,15 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 1: Success recipe creation (Normal Flow)
     def test_create_recipe(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
+
         data = {
             'name': 'recipe 1',
             'ingredients': 'egg, sugar, milk',
             'description': 'test description',
-            'email': 'rambod@email.com'
+            'email': 'rambod@email.com',
+            'image': image_data,
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 201)
@@ -37,10 +42,13 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 2: Recipe creation with missing name
     def test_create_recipe_missing_name(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
         data = {
             'ingredients': 'egg, sugar, milk',
             'description': 'test description',
-            'email': 'rambod@email.com'
+            'email': 'rambod@email.com',
+            'image': image_data
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 400)
@@ -49,10 +57,14 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 3: Recipe creation with missing ingredients
     def test_create_recipe_missing_ingredient(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
         data = {
             'name': 'recipe 1',
             'description': 'test description',
-            'email': 'rambod@email.com'
+            'email': 'rambod@email.com',
+            'image': image_data
+
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 400)
@@ -61,10 +73,13 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 4: Recipe creation with missing email
     def test_create_recipe_missing_email(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
         data = {
             'name': 'recipe',
             'ingredients': 'egg, sugar, milk',
             'description': 'test description',
+            'image': image_data
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 400)
@@ -73,10 +88,13 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 5: Recipe creation with missing description
     def test_create_recipe_missing_description(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
         data = {
             'name': 'recipe',
             'ingredients': 'egg, sugar, milk',
             'email': 'rambod@email.com',
+            'image': image_data
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 400)
@@ -85,11 +103,15 @@ class TestCreateRecipe(unittest.TestCase):
 
     # Unit test 6: Recipe creation with invalid email
     def test_create_recipe_invalid_email(self):
+        with open ('../picture/image1.png', 'rb') as image:
+            image_data = base64.b64encode(image.read()).decode('utf-8')
+
         data = {
             'name': 'recipe',
             'ingredients': 'egg, sugar, milk',
             'description': 'test',
             'email': 'rambodemail.com',
+            'image': image_data
         }
         response = self.app.post('/createRecipe', json=data)
         self.assertEqual(response.status_code, 400)

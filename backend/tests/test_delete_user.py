@@ -1,8 +1,7 @@
 import unittest
 import sys
 sys.path.append('../')
-from app import app, db
-
+from app import app, db 
 
 class TestDeleteUser(unittest.TestCase):
     def setUp(self):
@@ -11,11 +10,11 @@ class TestDeleteUser(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://recipe_database_gp57_user:zKPQLZ5Al0DI2lE3y5z8yPfcdZTr9Scn@dpg-cn42fb7109ks73eskttg-a.oregon-postgres.render.com/recipe_database_gp57'
 
         self.app = app.test_client()
-        
+
         # Create all database tables
         with app.app_context():
             db.create_all()
-
+        
     def tearDown(self):
         # Remove all database tables
         with app.app_context():

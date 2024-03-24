@@ -39,6 +39,7 @@ class Recipe(db.Model):
         - ingredients: Array[Strings] NOT NULL
         - description: varchar(10000) NOT NULL
         - foodie: User NOT NULL
+        - image: LargeBinary NULLABLE
 
     Routes:
         - create_recipe() --> POST (/createRecipe)
@@ -48,6 +49,7 @@ class Recipe(db.Model):
     ingredients = db.Column(db.ARRAY(db.String(100)), nullable=False)
     description = db.Column(db.String(10000), nullable=False)
     email = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.LargeBinary, nullable=True)  # Changed to LargeBinary to store binary data
 
   
 

@@ -4,6 +4,7 @@ import {
   SubTitleText,
   LargeTextInputWhite,
   TextInput,
+  FileInput,
   CustomButton,
 } from "../Components";
 import { COLORS, FONTS } from "../GLOBAL";
@@ -26,7 +27,6 @@ const PostScreen = () => {
   const [recipeName, setRecipeName] = React.useState("");
   const [ingredients, setIngredients] = React.useState("");
   const [description, setDescription] = React.useState("");
-  // const [passwordError, setPasswordError] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -41,37 +41,50 @@ const PostScreen = () => {
     setDescription(text);
   };
   const handleCreateRecipe = async () => {
-    console.log(localStorage.getItem("username"))
     try {
+      const imageFile = document.getElementById("file-input").files[0];
+      let imageData = null;
+
+      if (imageFile) {
+      imageData = await readFileAsBase64(imageFile); // Convert image to Base64
+      }
+      
       const userData = {
         name: recipeName,
         ingredients: ingredients,
         description: description,
         email: localStorage.getItem("username"),
+        image: imageData, // Include image data in the JSON data
       };
-      
+  
       const result = await createRecipe(userData);
-      console.log(result)
-      console.log(ingredients)
 
-      if (result && result.status === 200) {
+      console.log(result);
+  
+      if (result && result.status === 201) {
         setRecipeName("");
         setIngredients("");
         setDescription("");
-        // setError("createdRecipe")
       } else if (result.status === 400) {
-        // setError(result.message);
+        setError(result.message);
       } else {
-        // setError("Registration failed");
-        // setOpen(true);
-        
+        setError("Registration failed");
       }
     } catch (error) {
-      // setError("Error creating recipe:", error.message);
-      // setOpen(true);
+      setError("Error creating recipe:", error.message);
     }
-
-
+  };
+  
+  // Function to read the uploaded image file and convert it to Base64 string
+  const readFileAsBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result.split(",")[1]); // Extract Base64 string from Data URL
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file); // Read the file as Data URL
+    });
   };
 
   const handleCLose = (reason) => {
@@ -131,7 +144,7 @@ const PostScreen = () => {
           </DialogTitle>
           <DialogContent dividers>
             
-            <TextInput
+            <FileInput
               label={"Choose a picture for your post"}
               width={"100%"}
               style={{ marginBottom: 2 }}
@@ -166,7 +179,7 @@ const PostScreen = () => {
             />
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CustomButton
-                label={"Save"}
+                label={"Create Post"}
                 onClick={handleCreateRecipe}
                 style={{ width: "20%", height: "50px" }}
                 backgroundChangeColor="white"
