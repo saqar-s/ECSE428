@@ -79,7 +79,13 @@ def add_image():
 @recipe.route('/getRecipes', methods=['GET'])
 def get_recipes():
     try:
-        recipes = Recipe.query.all()
+        # Check if the request is for a specific user's recipes
+        user_email = request.args.get('user_email')
+        if user_email:
+            recipes = Recipe.query.filter_by(email=user_email).all()
+        else:
+            recipes = Recipe.query.all()
+            
         recipe_list = []
         for recipe in recipes:
             # Encode the image data as Base64

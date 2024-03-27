@@ -57,8 +57,9 @@ export const deleteRecipe = async (data) => {
 };
 
 //get the recipes from the backend
-export const getRecipes = async () => {
+export const getRecipes = async (user_email = null) => {
   try {
+    const params = user_email ? { params: { user_email } } : {};
     const response = await api.get('/getRecipes');
     return { status: response.status, data: response.data };
   } catch (error) {
