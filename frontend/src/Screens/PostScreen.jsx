@@ -29,6 +29,11 @@ const PostScreen = () => {
   const [description, setDescription] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState(null);
+
+  const handleFileSelect = (file) => {
+    setSelectedFile(file);
+  };
 
   const handleRecipeNameChange = (text) => {
     setRecipeName(text);
@@ -39,13 +44,26 @@ const PostScreen = () => {
   const handleDescriptionChange = (text) => {
     setDescription(text);
   };
+
+  const readFileAsBase64 = async (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result.split(",")[1]);
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleCreateRecipe = async () => {
     try {
-      const imageFile = document.getElementById("file-input").files[0];
+      const imageFile = selectedFile;
       let imageData = null;
 
       if (imageFile) {
-        imageData = await readFileAsBase64(imageFile); // Convert image to Base64
+        imageData = await readFileAsBase64(imageFile);
+        console.log(imageData);
       }
 
       const userData = {
@@ -53,37 +71,28 @@ const PostScreen = () => {
         ingredients: ingredients,
         description: description,
         email: localStorage.getItem("username"),
-        image: imageData, // Include image data in the JSON data
+        image: imageData,
       };
 
       const result = await createRecipe(userData);
-
-      console.log(result);
 
       if (result && result.status === 201) {
         setRecipeName("");
         setIngredients("");
         setDescription("");
+        setSelectedFile(null);
+        setOpen(false);
       } else if (result.status === 400) {
         setError(result.message);
+        console.log(result.message);
       } else {
-        setError("Registration failed");
+        setError("failed");
+        console.log(result.message);
       }
     } catch (error) {
       setError("Error creating recipe:", error.message);
+      console.log(error);
     }
-  };
-
-  // Function to read the uploaded image file and convert it to Base64 string
-  const readFileAsBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result.split(",")[1]); // Extract Base64 string from Data URL
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file); // Read the file as Data URL
-    });
   };
 
   const handleCLose = (reason) => {
@@ -147,6 +156,7 @@ const PostScreen = () => {
               width={"100%"}
               style={{ marginBottom: 2 }}
               labelColor="white"
+              onFileSelect={handleFileSelect}
             />
             <TextInput
               label={"What is the name/title of your recipe?"}

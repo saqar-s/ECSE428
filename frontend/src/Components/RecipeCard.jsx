@@ -30,6 +30,7 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
   const handleAddToCalendar = () => {
     console.log("add to caledar");
   };
+  const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
       sx={{
@@ -45,8 +46,8 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
       <CardMedia
         component="img"
         height="194"
-        image={imageURL}
-        alt="don't care"
+        image={decodedImageURL}
+        alt="No image to display"
       />
       <CardContent>
         <Typography
