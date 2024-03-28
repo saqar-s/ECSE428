@@ -30,6 +30,11 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
   const handleAddToCalendar = () => {
     console.log("add to caledar");
   };
+
+  //handle delete
+  const handleDelete = () => {
+    console.log("delete recipe");
+  };
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
@@ -96,6 +101,13 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
           onClick={handleAddToCalendar}
           style={{ width: "100%" }}
         />
+        {deletable && (
+          <CustomButton
+            label={"Delete Recipe"}
+            onClick={handleDelete}
+            style={{ width: "100%" }}
+          />
+        )}
       </CardActions>
     </Card>
   );
