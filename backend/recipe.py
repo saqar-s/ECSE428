@@ -1,7 +1,7 @@
 import base64
 from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
-from models import db,Recipe
+from models import db,Recipe, User
 
 
 recipe = Blueprint('recipe', __name__)
@@ -134,4 +134,28 @@ def delete_recipe():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
+@recipe.route('/<RecipeName>/viewCreator', methods = ['GET'])
+def view_creator(RecipeName):
+    #id = request.args.get('id')
+    try: 
+        
+        recipe = Recipe.query.filter_by(name=RecipeName).first()
+        if recipe is None:
+            return jsonify({'message': 'No recipe exists with that ID'}), 404
+        
+        email = recipe.email
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return jsonify({'message': 'No user exists with that email'}), 404
+        
+        creator_info = {
+            'name': user.name,
+            'email': user.email,
+            'age': user.age
+        }
+        return jsonify({'creator_info': creator_info}), 200
+       
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
     
