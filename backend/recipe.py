@@ -109,6 +109,9 @@ def get_recipes():
 
 
 ##method to delete a recipe by id
+##check if recipe id is empty
+##check if db has a recipe stored with that id
+##delete the recipe
 @recipe.route('/deleteRecipe', methods=['DELETE'])
 def delete_recipe():
     data = request.json

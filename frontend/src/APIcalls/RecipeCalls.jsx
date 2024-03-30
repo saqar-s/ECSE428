@@ -60,6 +60,7 @@ export const deleteRecipe = async (data) => {
 //get the recipes
 export const getRecipes = async (user_email = null) => {
   try {
+    //When getting the recipe, it is important to get the id also for the delete process
     const response = user_email
       ? await api.get(`/getRecipes?user_email=${user_email}`)
       : await api.get("/getRecipes");
