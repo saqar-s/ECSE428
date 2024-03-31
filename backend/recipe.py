@@ -102,11 +102,51 @@ def get_recipes():
                 'email': recipe.email,
                 'image': image_base64
             })
-        return jsonify({'recipes': recipe_list}), 200
+            
+        if len(recipe_list) == 0:
+            return jsonify({'message': 'No Recipes in Database'}), 200
+        else:
+            return jsonify({'recipes': recipe_list}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
     
 
+@recipe.route('/getARecipe', methods=['GET'])
+def get_a_recipe():
+    data = request.json
+    name = data.get('name')
+    try:
+        if not (name):
+            # Return error message
+            return jsonify({'message': 'Name field required'}), 405
+        
+        recipes = Recipe.query.all()
+        if not recipes:
+            return jsonify({'message': 'There are no recipes in the database'}), 406
+        recipe_list = []
+        for recipe in recipes:
+            if str(name) in str(recipe.name):
+                # Encode the image data as Base64
+                if recipe.image:
+                    image_base64 = base64.b64encode(recipe.image).decode('utf-8')
+                else:
+                    image_base64 = None
+                
+                recipe_list.append({
+                    'id': recipe.id,
+                    'name': recipe.name,
+                    'ingredients': recipe.ingredients,
+                    'description': recipe.description,
+                    'email': recipe.email,
+                    'image': image_base64
+                })
+        if len(recipe_list) == 0:
+            return jsonify({'message': 'Recipe Not Found'}), 200
+        else:
+            return jsonify({'recipes': recipe_list}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    
 
 ##method to delete a recipe by id
 @recipe.route('/deleteRecipe', methods=['DELETE'])
