@@ -44,6 +44,7 @@ const DashboardScreen = () => {
               imageURL={recipe.image}
               description={recipe.description}
               author={recipe.email}
+              recipeId={recipe.id}
             />
           </Grid>
         ))}

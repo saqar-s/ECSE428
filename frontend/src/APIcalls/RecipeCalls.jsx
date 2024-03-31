@@ -69,3 +69,13 @@ export const getRecipes = async (user_email = null) => {
     return { status: 500, message: "Internal server error" };
   }
 };
+
+export const addToFavourites = async (data) => {
+  try {
+    const response = await api.post("/addFavourite")
+    return { status: response.status, data: response.data };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};
+
