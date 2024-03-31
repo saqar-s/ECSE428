@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from account import account
 from recipe import recipe
+from calendar_event import calendar_event
 from models import db, migrate
 
 app = Flask(__name__)
@@ -19,6 +20,8 @@ with app.app_context():
 
 app.register_blueprint(account)
 app.register_blueprint(recipe)
+app.register_blueprint(calendar_event)
+
 
 if __name__ == '__main__':
     app.run(debug=True , port=8000, use_reloader=False)
