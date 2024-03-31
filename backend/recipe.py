@@ -150,24 +150,38 @@ def add_favourite():
     if not recipe:
         return jsonify({'message': 'Recipe not found'}), 404
    
-    user.favorite_recipes.append(recipe)
+    user.favourite_recipes.append(recipe)
     db.session.commit()
 
 
-    return jsonify({'message': 'Recipe added to favorites successfully'}), 200
+    return jsonify({'message': 'Recipe added to favourites successfully'}), 200
 
 
 @recipe.route('/favourites', methods=['GET'])
 def get_favourites():
     user_email = session.get('user_email') #is this right?
 
-
     user = User.query.filter_by(email=user_email).first()
     if not user:
         return jsonify({'message': 'User does not exist'}), 404
    
-    favourite_recipes = [format_recipe(recipe) for recipe in user.favorite_recipes]
-    return jsonify({'favorites': favourite_recipes}), 200
+    favourite_recipes = []
+    for recipe in user.favourite_recipes:
+        # Encode the image data as Base64
+        if recipe.image:
+            image_base64 = base64.b64encode(recipe.image).decode('utf-8')
+        else:
+            image_base64 = None
+
+        favourite_recipes.append({
+                'id': recipe.id,
+                'name': recipe.name,
+                'ingredients': recipe.ingredients,
+                'description': recipe.description,
+                'email': recipe.email,
+                'image': image_base64
+            })
+    return jsonify({'favourites': favourite_recipes}), 200
 
 
     

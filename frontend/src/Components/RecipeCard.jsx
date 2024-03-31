@@ -14,7 +14,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
-const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
+import { addToFavourites } from "../APIcalls/RecipeCalls";
+const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable }) => {
   const [showMore, setShowMore] = React.useState(false);
 
   const handleShowMore = () => {
@@ -23,13 +24,25 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
 
   const [isFavorite, setIsFavorite] = React.useState(false);
 
-  const handleToggleFavorite = () => {
-    setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+  const handleToggleFavorite = async () => {
+    try{
+      setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+      if (!isFavorite){
+        const username = localStorage.getItem("username");
+        const favData = { name: title, image: imageURL, description: description, email: author, id: recipeId };
+        await addToFavourites(favData); // not sure what data I should send here
+      } 
+    } catch (error) {
+        console.error("Could not add to favourites: ", error)
+    }
+    
+
   };
   //handle add to calendar to be done
   const handleAddToCalendar = () => {
     console.log("add to caledar");
   };
+
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
