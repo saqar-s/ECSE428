@@ -9,6 +9,7 @@ const FileInput = ({
   hasError,
   onClick,
   style,
+  onFileSelect,
 
   width = "50%",
 }) => {
@@ -30,8 +31,8 @@ const FileInput = ({
     const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
 
     if (file && allowedTypes.includes(file.type)) {
-      if (onClick && typeof onClick === "function") {
-        onClick(file);
+      if (onFileSelect && typeof onFileSelect === "function") {
+        onFileSelect(file);
       }
       setError("");
     } else {

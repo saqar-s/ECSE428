@@ -6,6 +6,7 @@ from test_register_user import TestRegisterUser
 from test_userlist import TestUserlist
 from test_create_recipe import TestCreateRecipe
 from test_delete_recipe import TestDeleteRecipe
+from test_view_recipe import TestViewRecipe
 
 test_suite = unittest.TestSuite()
 
@@ -16,5 +17,6 @@ test_suite.addTest(unittest.makeSuite(TestRegisterUser))
 test_suite.addTest(unittest.makeSuite(TestUserlist))
 test_suite.addTest(unittest.makeSuite(TestCreateRecipe))
 test_suite.addTest(unittest.makeSuite(TestDeleteRecipe))
+test_suite.addTest(unittest.makeSuite(TestViewRecipe))
 
 unittest.TextTestRunner().run(test_suite)

@@ -46,40 +46,46 @@ def create_recipe():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
     
-@recipe.route('/addImage', methods=['PUT'])
-def add_image():
-    data = request.json
-    name = data.get('name')
-    image_data_base64 = data.get('image')
+# @recipe.route('/addImage', methods=['PUT'])
+# def add_image():
+#     data = request.json
+#     name = data.get('name')
+#     image_data_base64 = data.get('image')
     
-    try:
-        # Check for empty fields
-        if not (name):
-            # Return error message
-            return jsonify({'message': 'Name field required'}), 400
+#     try:
+#         # Check for empty fields
+#         if not (name):
+#             # Return error message
+#             return jsonify({'message': 'Name field required'}), 400
         
-        # Decode Base64-encoded image data back to bytes
-        if image_data_base64 is not None:
-            image = base64.b64decode(image_data_base64)
-        else:
-            image = None
+#         # Decode Base64-encoded image data back to bytes
+#         if image_data_base64 is not None:
+#             image = base64.b64decode(image_data_base64)
+#         else:
+#             image = None
 
         
-        # Update recipe
-        recipe = Recipe.query.filter_by(name=name).first()
-        recipe.image = image
-        db.session.commit()
+#         # Update recipe
+#         recipe = Recipe.query.filter_by(name=name).first()
+#         recipe.image = image
+#         db.session.commit()
         
-        return jsonify({'message': 'Image added successfully'}), 200
+#         return jsonify({'message': 'Image added successfully'}), 200
     
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
+#     except Exception as e:
+#         return jsonify({'message': str(e)}), 500
 
     
 @recipe.route('/getRecipes', methods=['GET'])
 def get_recipes():
     try:
-        recipes = Recipe.query.all()
+        # Check if the request is for a specific user's recipes
+        user_email = request.args.get('user_email')
+        if user_email:
+            recipes = Recipe.query.filter_by(email=user_email).all()
+        else:
+            recipes = Recipe.query.all()
+            
         recipe_list = []
         for recipe in recipes:
             # Encode the image data as Base64
