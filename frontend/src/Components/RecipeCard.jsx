@@ -29,7 +29,7 @@ const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable 
       setIsFavorite((prevIsFavorite) => !prevIsFavorite);
       if (!isFavorite){
         const username = localStorage.getItem("username");
-        const favData = { name: title, image: imageURL, description: description, email: author, id: recipeId };
+        const favData = { email: username, id: recipeId };
         await addToFavourites(favData); // not sure what data I should send here
       } 
     } catch (error) {

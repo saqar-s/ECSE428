@@ -1,7 +1,7 @@
 import base64
 from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
-from models import db,Recipe, User, favourites
+from models import db,Recipe, User #favourites
 
 
 recipe = Blueprint('recipe', __name__)
@@ -137,24 +137,24 @@ def delete_recipe():
 @recipe.route('/addFavourite', methods=['POST'])
 def add_favourite():
     data = request.json
-    recipe_id = data.get('recipe_id')
+    recipe_id = data.get('id')
     # check if signed in !!!!!!!!!!!!!!!!!!!
-    user_email = session.get('user_email') #is this right?
-
-
+    #user_email = session.get('email') #is this right?
+    user_email = data.get('email')
     user = User.query.filter_by(email=user_email).first()
-    if not user:
+    if not user_email:
         return jsonify({'message': 'User does not exist'}), 404
    
     recipe = Recipe.query.get(recipe_id).first()
-    if not recipe:
+    if not recipe_id:
         return jsonify({'message': 'Recipe not found'}), 404
-   
-    user.favourite_recipes.append(recipe)
-    db.session.commit()
-
-
-    return jsonify({'message': 'Recipe added to favourites successfully'}), 200
+    if recipe_id not in user.favourites:
+        user.favourites.append(recipe_id) #check this
+        db.session.commit()
+        return jsonify({'message': 'Recipe added to favourites successfully'}), 200
+    else:
+        return jsonify({'message': 'Recipe already favourited'}), 200
+        
 
 
 @recipe.route('/favourites', methods=['GET'])
