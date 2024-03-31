@@ -2,7 +2,7 @@ import base64
 from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
 from models import db,Recipe, User #favourites
-
+import array
 
 recipe = Blueprint('recipe', __name__)
 
@@ -144,19 +144,24 @@ def add_favourite():
     user = User.query.filter_by(email=user_email).first()
     if not user_email:
         return jsonify({'message': 'User does not exist'}), 404
-   
-    recipe = Recipe.query.get(recipe_id).first()
-    if not recipe_id:
+    
+    recipe = Recipe.query.get(recipe_id)
+    if not recipe:
         return jsonify({'message': 'Recipe not found'}), 404
-    if recipe_id not in user.favourites:
-        user.favourites.append(recipe_id) #check this
-        db.session.commit()
-        return jsonify({'message': 'Recipe added to favourites successfully'}), 200
-    else:
-        return jsonify({'message': 'Recipe already favourited'}), 200
+    
+    #user.favourites.append(recipe_id) #check this
+    favourite_list = [recipe_id]
+    favourite_array = array.array('i', favourite_list)
+    old_array = array.array('i', user.favourites)
+    for i in user.favourites:
+        if i == recipe_id:
+            return jsonify({'message': 'Recipe already favourited'}), 200
+    user.favourites = old_array + favourite_array
+    db.session.commit()
+    return jsonify({'message': 'Recipe added to favourites successfully'}), 200
         
 
-
+"""
 @recipe.route('/favourites', methods=['GET'])
 def get_favourites():
     user_email = session.get('user_email') #is this right?
@@ -182,6 +187,6 @@ def get_favourites():
                 'image': image_base64
             })
     return jsonify({'favourites': favourite_recipes}), 200
-
+"""
 
     
