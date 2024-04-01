@@ -164,9 +164,9 @@ def add_favourite():
 
 @recipe.route('/favourites', methods=['GET'])
 def get_favourites():
-    data = request.json
-    #user_email = request.args.get('email')
-    user_email = data.get('email')
+    user_email = request.args.get('email')
+    #print(user_email)
+    
     user = User.query.filter_by(email=user_email).first()
     
     if not user_email:

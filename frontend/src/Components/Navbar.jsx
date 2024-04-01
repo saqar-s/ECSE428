@@ -17,7 +17,7 @@ const NavBar = () => {
     { name: "Dashboard", path: "/" },
     { name: "Make a post", path: "/post" },
     { name: "Calendar", path: "/calendar" },
-    { name: "Favorites", path: "/favorites" },
+    { name: "Favourites", path: "/favourites" },
     { name: "User List", path: "/userlist" },
   ];
 
