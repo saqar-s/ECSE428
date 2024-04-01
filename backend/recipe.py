@@ -1,8 +1,8 @@
 import base64
 from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
-from models import db,Recipe, User
-
+from models import db,Recipe, User #favourites
+import array
 
 recipe = Blueprint('recipe', __name__)
 
@@ -133,29 +133,61 @@ def delete_recipe():
     
     except Exception as e:
         return jsonify({'message': str(e)}), 500
-
-@recipe.route('/<RecipeName>/viewCreator', methods = ['GET'])
-def view_creator(RecipeName):
-    #id = request.args.get('id')
-    try: 
-        
-        recipe = Recipe.query.filter_by(name=RecipeName).first()
-        if recipe is None:
-            return jsonify({'message': 'No recipe exists with that ID'}), 404
-        
-        email = recipe.email
-
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            return jsonify({'message': 'No user exists with that email'}), 404
-        
-        creator_info = {
-            'name': user.name,
-            'email': user.email,
-            'age': user.age
-        }
-        return jsonify({'creator_info': creator_info}), 200
-       
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
     
+@recipe.route('/addFavourite', methods=['POST'])
+def add_favourite():
+    data = request.json
+    recipe_id = data.get('id')
+    # check if signed in !!!!!!!!!!!!!!!!!!!
+    #user_email = session.get('email') #is this right?
+    user_email = data.get('email')
+    user = User.query.filter_by(email=user_email).first()
+    if not user_email:
+        return jsonify({'message': 'User does not exist'}), 404
+    
+    recipe = Recipe.query.get(recipe_id)
+    if not recipe:
+        return jsonify({'message': 'Recipe not found'}), 404
+    
+    #user.favourites.append(recipe_id) #check this
+    favourite_list = [recipe_id]
+    favourite_array = array.array('i', favourite_list)
+    old_array = array.array('i', user.favourites)
+    for i in user.favourites:
+        if i == recipe_id:
+            return jsonify({'message': 'Recipe already favourited'}), 200
+        
+    user.favourites = old_array + favourite_array
+    db.session.commit()
+    return jsonify({'message': 'Recipe added to favourites successfully'}), 200
+        
+
+@recipe.route('/favourites', methods=['GET'])
+def get_favourites():
+    data = request.json
+    #user_email = request.args.get('email')
+    user_email = data.get('email')
+    user = User.query.filter_by(email=user_email).first()
+    
+    if not user_email:
+        return jsonify({'message': 'User does not exist'}), 404
+    
+    favourite_recipes = []
+    for r in user.favourites:
+        recipe = Recipe.query.filter_by(id=r)
+        recipe = recipe[0]
+        # Encode the image data as Base64
+        if recipe.image:
+            image_base64 = base64.b64encode(recipe.image).decode('utf-8')
+        else:
+            image_base64 = None
+
+        favourite_recipes.append({
+                'id': recipe.id,
+                'name': recipe.name,
+                'ingredients': recipe.ingredients,
+                'description': recipe.description,
+                'email': recipe.email,
+                'image': image_base64
+            })
+    return jsonify({'favourites': favourite_recipes}), 200
