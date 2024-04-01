@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
+#favourites = db.Table('favourites', db.Column('user_email', db.String(100), db.ForeignKey('user.email'), primary_key=True), db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True))
+
 class User(db.Model):
     """
     Relation Name: User
@@ -25,6 +27,8 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
+    favourites = db.Column(db.ARRAY(db.Integer), nullable=True, default=[]) # a list of favourite recipe id's
+    #favourite_recipes = db.relationship('Recipe', secondary=favourites, lazy='subquery', backref=db.backref('favourited_by', lazy=True))
 
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
@@ -72,6 +76,5 @@ class CalendarEvent(db.Model):
     recipeName = db.Column(db.String(100), db.ForeignKey('recipe.name'), nullable=False)
     recipe = db.relationship('Recipe', backref=db.backref('calendar_events', lazy=True))
     email = db.Column(db.String(100), nullable=False)
-
     def __repr__(self):
         return f"Calendar Event('{self.date}')"
