@@ -1,7 +1,7 @@
 import base64
 from flask import request, jsonify, session, Blueprint
 from flask_cors import CORS
-from models import db,Recipe
+from models import db,Recipe, User
 
 
 recipe = Blueprint('recipe', __name__)
@@ -133,5 +133,29 @@ def delete_recipe():
     
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+    
+@recipe.route('/removeRecipeFromFavourites', methods=['DELETE'])
+def removeRecipeFromFavourites():
+    #for a given user, we want to be able to remove a recipe from their favourites list
+    data = request.json 
+    email = data.get('email')
+    recipeId = data.get('id')
 
+    recipe = Recipe.query.filter_by(id=recipeId).first() #making sure the id is related to a recipe in our table 
+
+    if not recipe: 
+        return jsonify({'message': "The recipe you are trying to delete does not exist"}), 400
+
+    if not email or not recipeId: 
+        return jsonify({'message': "Must include a recipe to delete form the user's favourites list"}), 400
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if recipeId not in user.favourites: 
+        return jsonify({'message': "Recipe is not in the user's favourites"}), 400
+
+    #IMP assuming that the user.favourites is a set, can only add a certain recipe to your favourites list once***
+    user.favourites.remove(recipeId)
+    db.session.commit()
+    return jsonify({'message': "Recipe removed from the user's favourites list succesfully"}), 200
     
