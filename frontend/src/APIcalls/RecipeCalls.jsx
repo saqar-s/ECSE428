@@ -79,3 +79,13 @@ export const addToFavourites = async (data) => {
   }
 };
 
+export const getFavourites = async (data) => {
+  try {
+    //get favourites given a user
+    const response = await api.get("/favourites", data)
+    return { status: response.status, data: response.data };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};
+
