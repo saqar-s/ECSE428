@@ -9,6 +9,7 @@ import { FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../APIcalls/AccountCalls";
 import { Alert, Snackbar } from "@mui/material";
+import { useAuth } from "../AuthContext";
 
 const SignInScreen = () => {
   const [username, setUsername] = React.useState("");
@@ -17,7 +18,7 @@ const SignInScreen = () => {
   const [passwordError, setPasswordError] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
-
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleUsernameChange = (text) => {
@@ -39,8 +40,9 @@ const SignInScreen = () => {
       const userData = { email: username, password: password };
       const result = await loginUser(userData);
 
-      if (result && result.status === 200) {
-        const { name, age } = result.response.data;
+      if (result && result.status === 201) {
+        const { name, age } = result.response.data.data;
+        login();
         localStorage.setItem("username", username);
         localStorage.setItem("user", name);
         localStorage.setItem("age", age);

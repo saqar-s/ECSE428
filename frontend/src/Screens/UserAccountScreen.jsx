@@ -18,6 +18,7 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { useAuth } from "../AuthContext";
 
 const UserAccountScreen = () => {
   const navigate = useNavigate();
@@ -56,10 +57,11 @@ const UserAccountScreen = () => {
       console.error("Could not modify data: ", error);
     }
   };
-
+  const { logout } = useAuth();
   const handleLogout = async () => {
     try {
       const response = await logoutUser();
+      logout();
       localStorage.clear();
       console.log(response);
     } catch (error) {

@@ -39,6 +39,7 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
   try {
     const response = await api.post("/login", data);
+
     return {
       response: response,
       status: response.status,
@@ -79,7 +80,7 @@ export const logoutUser = async () => {
 export const modifyUserDetails = async (data) => {
   try {
     //const response = await api.post("/modify", data);
-    const response = await api.put('/modify', data)
+    const response = await api.put("/modify", data);
     return {
       response: response,
       status: response.status,
@@ -117,11 +118,17 @@ export const getUserList = async () => {
       const status = error.response.status;
       let errorMessage;
 
-      errorMessage = "Data base was empty of Users!"
+      errorMessage = "Data base was empty of Users!";
 
       return { status, message: errorMessage };
     } else {
       return { status: 500, message: "Internal server error" };
     }
   }
+};
+
+export const deleteUser = async (user) => {
+  try {
+    const response = await api.delete("/delete", user);
+  } catch (error) {}
 };
