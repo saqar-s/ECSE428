@@ -156,6 +156,7 @@ def add_favourite():
     for i in user.favourites:
         if i == recipe_id:
             return jsonify({'message': 'Recipe already favourited'}), 200
+        
     user.favourites = old_array + favourite_array
     db.session.commit()
     return jsonify({'message': 'Recipe added to favourites successfully'}), 200
