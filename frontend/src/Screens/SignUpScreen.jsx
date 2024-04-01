@@ -9,6 +9,7 @@ import { FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../APIcalls/AccountCalls";
 import { Alert, Snackbar } from "@mui/material";
+import { useAuth } from "../AuthContext";
 
 const SignUpScreen = () => {
   const [username, setUsername] = React.useState("");
@@ -18,6 +19,7 @@ const SignUpScreen = () => {
   const [emailError, setEmailError] = React.useState("");
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const { login } = useAuth();
 
   const navigate = useNavigate();
 
@@ -61,6 +63,7 @@ const SignUpScreen = () => {
       const result = await registerUser(userData);
 
       if (result && result.status === 201) {
+        login();
         localStorage.setItem("username", username);
         localStorage.setItem("user", name);
         localStorage.setItem("age", age);
