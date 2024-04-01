@@ -127,8 +127,26 @@ export const getUserList = async () => {
   }
 };
 
-export const deleteUser = async (user) => {
+export const deleteUser = async (email) => {
   try {
-    const response = await api.delete("/delete", user);
-  } catch (error) {}
+    const response = await api.delete(`/delete?email=${email}`);
+    return response;
+  } catch (error) {
+    if (error) {
+      const status = error.response.status;
+      let errorMessage;
+
+      switch (status) {
+        case 401:
+          errorMessage = "User doesn't exist";
+          break;
+        default:
+          errorMessage = "Failed to modify user details";
+          break;
+      }
+      return { status, message: errorMessage };
+    } else {
+      return { status: 500, message: "Internal server error" };
+    }
+  }
 };

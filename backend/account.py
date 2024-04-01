@@ -122,36 +122,19 @@ def modify_user():
 def delete_account():
     try:
         #Get email and password
-        data = request.json
-        email = data.get('email')
+        email = request.args.get('email')
         
         user = User.query.filter_by(email=email).first()
         # Check if email does not exist
         if not user:
             return jsonify({'message': 'Not an active account'}), 400
+        
+        session['user_email'] = user.email
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deletion successful'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
-
-# Final functionality of the user deletion feature will only require the user to be logged in.
-"""
-@user.route('/delete', methods=['DELETE'])
-def delete_user():
-    if session.get('user_email') == None:
-        return 'Please log in to delete an account'
-    else:
-        try:
-            user = User.query.filter_by(email=session.get('user_email')).first()
-            if not user:
-                return jsonify({'message': 'Not an active account'}), 400
-            db.session.delete(user)
-            db.session.commit()
-        except:
-            return 'Error, unable to delete account, please contact an admin...'
-
-"""
 
 @account.route('/searchuser', methods=['GET'])
 def search_user():
