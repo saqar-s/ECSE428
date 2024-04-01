@@ -165,13 +165,17 @@ def add_favourite():
 @recipe.route('/favourites', methods=['GET'])
 def get_favourites():
     data = request.json
-    user_email = data.get('user_email') 
+    #user_email = request.args.get('email')
+    user_email = data.get('email')
     user = User.query.filter_by(email=user_email).first()
-    if not user:
+    
+    if not user_email:
         return jsonify({'message': 'User does not exist'}), 404
     
     favourite_recipes = []
-    for recipe in user.favourites:
+    for r in user.favourites:
+        recipe = Recipe.query.filter_by(id=r)
+        recipe = recipe[0]
         # Encode the image data as Base64
         if recipe.image:
             image_base64 = base64.b64encode(recipe.image).decode('utf-8')
