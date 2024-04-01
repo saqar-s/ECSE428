@@ -64,8 +64,13 @@ def login_user():
             return jsonify({'message': 'Invalid password'}), 401
 
         session['user_email'] = user.email
+        user_data = {
+            'email': user.email,
+            'name': user.name,
+            'age': user.age
+        }
 
-        return jsonify({'message': 'Login successful'}), 201
+        return jsonify({'message': 'Login successful','data':user_data},), 201
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
@@ -76,7 +81,7 @@ def login_user():
 def logout_user():
     # Clear the session
     session.clear()
-    return jsonify({'message': 'Logout successful'}), 200
+    return jsonify({'message': 'Logout successful', }), 200
 
 
 @account.route('/modify', methods=['PUT'])
@@ -105,10 +110,9 @@ def modify_user():
             return jsonify({'message': 'Age must be an integer'}), 400
 
         session['user_email'] = user.email
-        user.name = name
-        user.age = age
+
         db.session.commit()
-        return jsonify({'message': 'User update successful', 'name': user.name, 'age': user.age, 'email': user.email}), 200
+        return jsonify({'message': 'User update successful' }), 200
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
@@ -120,15 +124,11 @@ def delete_account():
         #Get email and password
         data = request.json
         email = data.get('email')
-        password = data.get('password')
         
         user = User.query.filter_by(email=email).first()
         # Check if email does not exist
         if not user:
             return jsonify({'message': 'Not an active account'}), 400
-        #Check if password is correct
-        if user.password != password:
-                return jsonify({'message': 'Invalid password'}), 401
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deletion successful'}), 200
