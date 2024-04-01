@@ -43,3 +43,37 @@ def addToCalendar():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@calendar_event.route('/removeFromCalendar', methods=['POST'])
+def removeFromCalendar():
+    data = request.json
+    recipeName = data.get('name')
+    date_str = data.get('date')
+    email = data.get('email')
+
+    try:
+        # Check for empty fields
+        if not all([recipeName, date_str, email]):
+            return jsonify({'message': 'All fields are required'}), 400
+
+        # Check date validity
+        date = datetime.strptime(date_str, '%Y-%m-%d')
+
+        if '@' not in email or '.' not in email:
+            return jsonify({'message': 'Invalid email address'}), 400
+
+        # Check if recipe exists
+        recipe = Recipe.query.filter_by(name=recipeName).first()
+        if recipe is None:
+            return jsonify({'error': 'Recipe not found'}), 404
+
+        existing_event = CalendarEvent.query.filter_by(recipeName=recipeName, date=date).first()
+        if not existing_event:
+            return jsonify({'error': 'There is no recipe of this name and date in your Calendar'}), 400
+        #Remove recipe from Calendar event
+        db.session.delete(existing_event)
+        db.session.commit()
+        return jsonify({'message': 'Removed recipe from Calendar successfully'}), 202
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
