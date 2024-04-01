@@ -30,7 +30,7 @@ const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable 
       if (!isFavorite){
         const username = localStorage.getItem("username");
         const favData = { email: username, id: recipeId };
-        await addToFavourites(favData); // not sure what data I should send here
+        await addToFavourites(favData);
       } 
     } catch (error) {
         console.error("Could not add to favourites: ", error)
