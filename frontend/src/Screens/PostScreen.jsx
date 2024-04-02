@@ -81,13 +81,14 @@ const PostScreen = () => {
         setIngredients("");
         setDescription("");
         setSelectedFile(null);
-        setOpen(false);
+
+        setOpen(!open);
       } else if (result.status === 400) {
         setError(result.message);
         console.log(result.message);
       } else {
         setError("failed");
-        console.log(result.message);
+        console.log("failed to create recipe");
       }
     } catch (error) {
       setError("Error creating recipe:", error.message);

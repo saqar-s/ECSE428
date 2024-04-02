@@ -8,15 +8,16 @@ import {
 } from "../Components";
 import { Grid } from "@mui/material";
 import { getFavourites } from "../APIcalls/RecipeCalls";
+import { useAuth } from "../AuthContext";
 
 const FavoritesScreen = () => {
   const [recipes, setRecipes] = React.useState([]);
-  const [loggedIn, setLoggedIn] = React.useState(true); // Assuming initially logged in
+  const { isLoggedInUser } = useAuth();
+
   const email = localStorage.getItem("username");
 
   React.useEffect(() => {
-    if (!email) {
-      setLoggedIn(false);
+    if (!isLoggedInUser) {
       return;
     }
 
@@ -28,19 +29,19 @@ const FavoritesScreen = () => {
       .catch((error) => {
         console.error("Error fetching recipes:", error);
       });
-  }, [email]); // Include email in the dependency array to trigger useEffect on email changes
+  }, [email]);
 
-  if (!loggedIn) {
+  if (!isLoggedInUser) {
     return (
       <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: 12,
-      }}
-    >
-       < SubTitleText text={"You must be signed in to view favourites!"} />
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          margin: 12,
+        }}
+      >
+        <SubTitleText text={"You must be signed in to view favourites!"} />
       </div>
     );
   }

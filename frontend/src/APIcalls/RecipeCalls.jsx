@@ -74,7 +74,10 @@ export const getRecipes = async (user_email = null) => {
 export const addToFavourites = async (data) => {
   try {
     const response = await api.post("/addFavourite", data);
-    return { status: response.status, message: "Added to favourites successfully" };
+    return {
+      status: response.status,
+      message: "Added to favourites successfully",
+    };
   } catch (error) {
     return { status: 500, message: "Internal server error" };
   }
@@ -88,7 +91,6 @@ export const getFavourites = async (email) => {
 
     return { status: response.status, data: response.data };
   } catch (error) {
-    return {error};
+    return { error };
   }
 };
-

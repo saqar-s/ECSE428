@@ -15,6 +15,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
 import { addToFavourites } from "../APIcalls/RecipeCalls";
+import { useFavorites } from "./FavoritesProvider";
 const RecipeCard = ({
   title,
   description,
@@ -24,25 +25,25 @@ const RecipeCard = ({
   deletable,
 }) => {
   const [showMore, setShowMore] = React.useState(false);
+  const { toggleFavorite, favorites, isFavorite } = useFavorites();
 
   const handleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const [isFavorite, setIsFavorite] = React.useState(false);
-
   const handleToggleFavorite = async () => {
     try {
-      setIsFavorite((prevIsFavorite) => !prevIsFavorite);
-      if (!isFavorite) {
-        const username = localStorage.getItem("username");
-        const favData = { email: username, id: recipeId };
+      toggleFavorite(recipeId);
+      const username = localStorage.getItem("username");
+      const favData = { email: username, id: recipeId };
+      if (!isFavorite(recipeId)) {
         await addToFavourites(favData);
       }
     } catch (error) {
       console.error("Could not add to favourites: ", error);
     }
   };
+
   //handle add to calendar to be done
   const handleAddToCalendar = () => {
     console.log("add to caledar");
@@ -106,7 +107,7 @@ const RecipeCard = ({
             style={{ width: "40%" }}
           />
           <IconButton onClick={handleToggleFavorite}>
-            {isFavorite ? (
+            {isFavorite(recipeId) ? (
               <FavoriteIcon sx={{ fontSize: 30, color: COLORS.Black }} />
             ) : (
               <FavoriteBorderIcon sx={{ fontSize: 30, color: COLORS.Black }} />
