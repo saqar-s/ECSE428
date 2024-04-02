@@ -147,7 +147,10 @@ def search_user():
     if not users:
         return jsonify({'message': 'There are no users in the database'}), 406
     newlist = []
+
     for user in users:
         newlist.append(user.name)
+
     tup = tuple(newlist)
+
     return jsonify(tup),203
