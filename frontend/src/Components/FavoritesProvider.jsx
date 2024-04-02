@@ -1,11 +1,14 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const FavoritesContext = createContext();
 
 export const useFavorites = () => useContext(FavoritesContext);
 
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const storedFavorites = localStorage.getItem("favorites");
+    return storedFavorites ? JSON.parse(storedFavorites) : [];
+  });
 
   const toggleFavorite = (recipeId) => {
     if (favorites.includes(recipeId)) {
@@ -16,6 +19,10 @@ export const FavoritesProvider = ({ children }) => {
   };
 
   const isFavorite = (recipeId) => favorites.includes(recipeId);
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   return (
     <FavoritesContext.Provider

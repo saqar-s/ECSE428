@@ -14,7 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
-import { addToFavourites } from "../APIcalls/RecipeCalls";
+import { addToFavourites, deleteFavourite } from "../APIcalls/RecipeCalls";
 import { useFavorites } from "./FavoritesProvider";
 const RecipeCard = ({
   title,
@@ -23,9 +23,10 @@ const RecipeCard = ({
   imageURL,
   recipeId,
   deletable,
+  handleDelete,
 }) => {
   const [showMore, setShowMore] = React.useState(false);
-  const { toggleFavorite, favorites, isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleShowMore = () => {
     setShowMore(!showMore);
@@ -38,6 +39,8 @@ const RecipeCard = ({
       const favData = { email: username, id: recipeId };
       if (!isFavorite(recipeId)) {
         await addToFavourites(favData);
+      } else {
+        await deleteFavourite(favData);
       }
     } catch (error) {
       console.error("Could not add to favourites: ", error);
@@ -50,9 +53,7 @@ const RecipeCard = ({
   };
 
   //handle delete
-  const handleDelete = () => {
-    console.log("delete recipe");
-  };
+
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
@@ -114,6 +115,7 @@ const RecipeCard = ({
             )}
           </IconButton>
         </div>
+
         <CustomButton
           label={"Add to Calendar"}
           onClick={handleAddToCalendar}
@@ -123,7 +125,7 @@ const RecipeCard = ({
           <CustomButton
             label={"Delete Recipe"}
             onClick={handleDelete}
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginTop: 0.5 }}
           />
         )}
       </CardActions>

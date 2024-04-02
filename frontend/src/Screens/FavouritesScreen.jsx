@@ -9,13 +9,14 @@ import {
 import { Grid } from "@mui/material";
 import { getFavourites } from "../APIcalls/RecipeCalls";
 import { useAuth } from "../AuthContext";
+import { useFavorites } from "../Components/FavoritesProvider";
 
 const FavoritesScreen = () => {
   const [recipes, setRecipes] = React.useState([]);
   const { isLoggedInUser } = useAuth();
 
   const email = localStorage.getItem("username");
-
+  const { favorites } = useFavorites();
   React.useEffect(() => {
     if (!isLoggedInUser) {
       return;
@@ -29,22 +30,14 @@ const FavoritesScreen = () => {
       .catch((error) => {
         console.error("Error fetching recipes:", error);
       });
-  }, [email]);
+  }, [isLoggedInUser, email]);
 
-  if (!isLoggedInUser) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          margin: 12,
-        }}
-      >
-        <SubTitleText text={"You must be signed in to view favourites!"} />
-      </div>
+  React.useEffect(() => {
+    const favoriteRecipeIds = new Set(favorites);
+    setRecipes((prevRecipes) =>
+      prevRecipes.filter((recipe) => favoriteRecipeIds.has(recipe.id))
     );
-  }
+  }, [favorites]);
 
   const cardsPerRow = Math.min(4, recipes.length);
 
@@ -61,22 +54,28 @@ const FavoritesScreen = () => {
       <div style={{ marginBottom: "6%" }}>
         <SubTitleText text={"Your favourite recipes!"} />
       </div>
-      {recipes.length === 0 ? (
-        <p>No favorite recipes found.</p>
+      {isLoggedInUser ? (
+        recipes.length === 0 ? (
+          <p>No favorite recipes found.</p>
+        ) : (
+          <Grid container spacing={2} marginLeft={2}>
+            {recipes.map((recipe, index) => (
+              <Grid item xs={12 / cardsPerRow} key={index}>
+                <RecipeCard
+                  title={recipe.name}
+                  imageURL={recipe.image}
+                  description={recipe.description}
+                  author={recipe.email}
+                  recipeId={recipe.id}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )
       ) : (
-        <Grid container spacing={2} marginLeft={2}>
-          {recipes.map((recipe, index) => (
-            <Grid item xs={12 / cardsPerRow} key={index}>
-              <RecipeCard
-                title={recipe.name}
-                imageURL={recipe.image}
-                description={recipe.description}
-                author={recipe.email}
-                recipeId={recipe.id}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <div>
+          You need to be logged in to be able to view your favourite recipes
+        </div>
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import {
   TextInput,
   FileInput,
   CustomButton,
+  RecipeCard,
 } from "../Components";
 import { COLORS, FONTS } from "../GLOBAL";
 import { useNavigate } from "react-router-dom";
@@ -13,14 +14,16 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogActions,
-  DialogContentText,
-  Typography,
-  colors,
   Alert,
   Snackbar,
+  Grid,
 } from "@mui/material";
-import { createRecipe } from "../APIcalls/RecipeCalls";
+import {
+  createRecipe,
+  getRecipes,
+  deleteRecipe,
+} from "../APIcalls/RecipeCalls";
+import { useAuth } from "../AuthContext";
 
 const PostScreen = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -30,6 +33,22 @@ const PostScreen = () => {
   const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [recipes, setRecipes] = React.useState([]);
+
+  const email = localStorage.getItem("username");
+  const { isLoggedInUser } = useAuth();
+
+  React.useEffect(() => {
+    getRecipes(email)
+      .then((response) => {
+        console.log(response.data.recipes);
+        setRecipes(response.data.recipes);
+      })
+      .catch((error) => {
+        console.error("Error fetching recipes:", error);
+      });
+  }, [recipes, email]);
+  const cardsPerRow = Math.min(4, recipes.length);
 
   const handleFileSelect = (file) => {
     setSelectedFile(file);
@@ -70,19 +89,17 @@ const PostScreen = () => {
         name: recipeName,
         ingredients: ingredients,
         description: description,
-        email: localStorage.getItem("username"),
+        email: email,
         image: imageData,
       };
 
       const result = await createRecipe(userData);
-
+      setDialogOpen(false);
       if (result && result.status === 201) {
         setRecipeName("");
         setIngredients("");
         setDescription("");
         setSelectedFile(null);
-
-        setOpen(!open);
       } else if (result.status === 400) {
         setError(result.message);
         console.log(result.message);
@@ -107,7 +124,27 @@ const PostScreen = () => {
     setDialogOpen(!dialogOpen);
     console.log();
   };
-  return (
+
+  const handleDelete = async (recipeId) => {
+    try {
+      const response = await deleteRecipe({ id: recipeId });
+      if (response && response.status === 200) {
+        console.log("Successfully deleted");
+        getRecipes(email)
+          .then((response) => {
+            console.log(response.data.recipes);
+            setRecipes(response.data.recipes);
+          })
+          .catch((error) => {
+            console.error("Error fetching recipes:", error);
+          });
+      }
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
+  return isLoggedInUser ? (
     <div
       style={{
         display: "flex",
@@ -120,9 +157,24 @@ const PostScreen = () => {
       <div style={{ marginBottom: "6%" }}>
         <SubTitleText text={"Make a post and share it with others to enjoy!"} />
       </div>
+      <Grid container spacing={2} marginLeft={2}>
+        {recipes.map((recipe, index) => (
+          <Grid item xs={12 / cardsPerRow} key={index}>
+            <RecipeCard
+              title={recipe.name}
+              imageURL={recipe.image}
+              description={recipe.description}
+              author={recipe.email}
+              recipeId={recipe.id}
+              deletable={true}
+              handleDelete={() => handleDelete(recipe.id)}
+            />
+          </Grid>
+        ))}
+      </Grid>
       <CustomButton
-        label={"Make a post"}
-        style={{ width: "30%" }}
+        label={"Create a new post"}
+        style={{ width: "30%", marginTop: 6 }}
         onClick={handleModalClick}
       />
       {dialogOpen && (
@@ -199,10 +251,28 @@ const PostScreen = () => {
         </Dialog>
       )}
       <Snackbar open={open} autoHideDuration={3000} onClose={handleCLose}>
-        <Alert variant="filled" severity="danger" sx={{ width: "100%" }}>
+        <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
           {error}
         </Alert>
       </Snackbar>
+    </div>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: 12,
+      }}
+    >
+      <TitleText text={"Welcome to Gourmet Guru!"} />
+      <div style={{ marginBottom: "6%" }}>
+        <SubTitleText text={"Make a post and share it with others to enjoy!"} />
+      </div>
+      <div>
+        You need to be logged in to be able to post and view your created
+        recipes
+      </div>
     </div>
   );
 };
