@@ -11,13 +11,14 @@ import { COLORS, FONTS } from "../GLOBAL";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const NavBar = () => {
   const pages = [
     { name: "Dashboard", path: "/" },
     { name: "Make a post", path: "/post" },
     { name: "Calendar", path: "/calendar" },
-    { name: "Favorites", path: "/favorites" },
+    { name: "Favourites", path: "/favourites" },
     { name: "User List", path: "/userlist" },
   ];
 
@@ -34,11 +35,10 @@ const NavBar = () => {
       fontWeightMedium: "normal",
     },
   });
-
+  const { isLoggedInUser } = useAuth();
   const handleAccountClick = () => {
-    const loggedInUser = localStorage.getItem("username");
     let result;
-    if (loggedInUser !== null) {
+    if (isLoggedInUser) {
       result = "/account";
     } else {
       result = "/signin";

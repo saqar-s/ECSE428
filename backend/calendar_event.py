@@ -1,6 +1,9 @@
 from flask import request, jsonify, Blueprint
 from flask_cors import CORS
 from models import db, Recipe, CalendarEvent
+from sqlalchemy import extract, and_
+from models import db
+from sqlalchemy import text
 
 from datetime import datetime
 
@@ -44,6 +47,7 @@ def addToCalendar():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+
 @calendar_event.route('/removeFromCalendar', methods=['POST'])
 def removeFromCalendar():
     data = request.json
@@ -77,3 +81,48 @@ def removeFromCalendar():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+#method should return all recipes for a given month for a given user? 
+@calendar_event.route('/getFromCalendar', methods=['GET'])
+def getFromCalender():
+    try:
+        #when getting the recipes for a given month, assuming you need: 
+        #the year, ex: 2020
+        #the month, in number format, ex: 04 (this means that singular number must have the 0 in front of them)
+        months  = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+        data = request.json
+        month = data.get('month')
+        year = data.get('year')
+
+        custom_query = text('''SELECT *
+            FROM calendar_event
+        WHERE EXTRACT(YEAR FROM date) = :year
+        AND EXTRACT(MONTH FROM date) = :month;''')
+
+        #should possibly implement a minimum year
+        if not month in months or not year: 
+            return jsonify({'message': 'Please enter a valid year and month'}), 400
+        else:
+            #recipes is a list of all recipes for a given month
+
+            events = db.session.execute(custom_query, {'year': year, 'month' : month})
+            events_data = events.fetchall()
+            results = [tuple(row) for row in events_data]
+
+            #if there are no recipes, still want to be able to display the calendar
+            event_list = [] #list of all recipe names and their dates
+            for event in results: 
+                event_list.append({
+                    'id': event[0],
+                    'date': event[1],
+                    'name': event[2],
+                    'email': event[3]
+                })
+            return jsonify({'events': event_list}), 200
+
+    except Exception as e: 
+        return jsonify({'error': str(e)}), 500
+
+    
+

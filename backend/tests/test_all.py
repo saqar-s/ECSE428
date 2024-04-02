@@ -9,6 +9,7 @@ from test_delete_recipe import TestDeleteRecipe
 from test_view_recipe import TestViewRecipe
 from test_add_to_calendar import TestAddToCalendar
 from test_remove_from_calendar import TestRemoveFromCalendar
+from test_view_favourite_recipe import TestViewFavouriteRecipe
 
 test_suite = unittest.TestSuite()
 
@@ -22,5 +23,6 @@ test_suite.addTest(unittest.makeSuite(TestDeleteRecipe))
 test_suite.addTest(unittest.makeSuite(TestViewRecipe))
 test_suite.addTest(unittest.makeSuite(TestAddToCalendar))
 test_suite.addTest(unittest.makeSuite(TestRemoveFromCalendar))
+test_suite.addTest(unittest.makeSuite(TestViewFavouriteRecipe))
 
 unittest.TextTestRunner().run(test_suite)

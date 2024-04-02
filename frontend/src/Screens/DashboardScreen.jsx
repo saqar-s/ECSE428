@@ -8,8 +8,10 @@ import {
 } from "../Components";
 import { Grid } from "@mui/material";
 import { getRecipes } from "../APIcalls/RecipeCalls";
+import { useFavorites } from "../Components/FavoritesProvider";
 const DashboardScreen = () => {
   const [recipes, setRecipes] = React.useState([]);
+  const { isFavorite } = useFavorites();
 
   React.useEffect(() => {
     getRecipes()
@@ -22,7 +24,7 @@ const DashboardScreen = () => {
       });
   }, []);
   const cardsPerRow = Math.min(4, recipes.length);
-  console.log(cardsPerRow);
+
   return (
     <div
       style={{
@@ -44,6 +46,8 @@ const DashboardScreen = () => {
               imageURL={recipe.image}
               description={recipe.description}
               author={recipe.email}
+              recipeId={recipe.id}
+              isFavorite={isFavorite(recipe.id)}
             />
           </Grid>
         ))}

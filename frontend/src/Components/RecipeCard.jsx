@@ -14,22 +14,46 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
-const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
+import { addToFavourites, deleteFavourite } from "../APIcalls/RecipeCalls";
+import { useFavorites } from "./FavoritesProvider";
+const RecipeCard = ({
+  title,
+  description,
+  author,
+  imageURL,
+  recipeId,
+  deletable,
+  handleDelete,
+}) => {
   const [showMore, setShowMore] = React.useState(false);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const [isFavorite, setIsFavorite] = React.useState(false);
-
-  const handleToggleFavorite = () => {
-    setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+  const handleToggleFavorite = async () => {
+    try {
+      toggleFavorite(recipeId);
+      const username = localStorage.getItem("username");
+      const favData = { email: username, id: recipeId };
+      if (!isFavorite(recipeId)) {
+        await addToFavourites(favData);
+      } else {
+        await deleteFavourite(favData);
+      }
+    } catch (error) {
+      console.error("Could not add to favourites: ", error);
+    }
   };
+
   //handle add to calendar to be done
   const handleAddToCalendar = () => {
     console.log("add to caledar");
   };
+
+  //handle delete
+
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
@@ -84,18 +108,26 @@ const RecipeCard = ({ title, description, author, imageURL, deletable }) => {
             style={{ width: "40%" }}
           />
           <IconButton onClick={handleToggleFavorite}>
-            {isFavorite ? (
+            {isFavorite(recipeId) ? (
               <FavoriteIcon sx={{ fontSize: 30, color: COLORS.Black }} />
             ) : (
               <FavoriteBorderIcon sx={{ fontSize: 30, color: COLORS.Black }} />
             )}
           </IconButton>
         </div>
+
         <CustomButton
           label={"Add to Calendar"}
           onClick={handleAddToCalendar}
           style={{ width: "100%" }}
         />
+        {deletable && (
+          <CustomButton
+            label={"Delete Recipe"}
+            onClick={handleDelete}
+            style={{ width: "100%", marginTop: 0.5 }}
+          />
+        )}
       </CardActions>
     </Card>
   );

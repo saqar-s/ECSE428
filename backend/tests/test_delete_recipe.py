@@ -20,6 +20,7 @@ class TestDeleteRecipe(unittest.TestCase):
     def tearDown(self):
         with app.app_context():
             db.session.remove()
+            db.reflect() #reflect needed to drop objects that depend on the recipe table => calendarEventFKey
             db.drop_all()
 
     # Unit test 1: Successful Recipe Deletion (Normal Flow)
@@ -45,7 +46,6 @@ class TestDeleteRecipe(unittest.TestCase):
     def test_delete_nonexist_recipe(self):
         # Delete recipe
         data = {
-            
         }
         response = self.app.delete('/deleteRecipe', json=data)
         self.assertEqual(response.status_code, 400)
