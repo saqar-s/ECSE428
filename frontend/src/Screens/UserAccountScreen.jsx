@@ -5,10 +5,11 @@ import {
   TextInput,
   CustomButton,
 } from "../Components";
-
-import { useLocation } from "react-router-dom";
-import { modifyUserDetails } from "../APIcalls/AccountCalls";
-import { logoutUser } from "../APIcalls/AccountCalls";
+import {
+  modifyUserDetails,
+  logoutUser,
+  deleteUser,
+} from "../APIcalls/AccountCalls";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
@@ -18,6 +19,7 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { useAuth } from "../AuthContext";
 
 const UserAccountScreen = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const UserAccountScreen = () => {
   const [ageModified, setAge] = React.useState(age);
   const [nameModified, setName] = React.useState(name);
   const [open, setOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState("");
 
   const handleUsernameChange = (text) => {
     setUsername(text);
@@ -49,19 +52,22 @@ const UserAccountScreen = () => {
         age: ageModified,
         email: username,
       });
-      console.log(response);
-      console.log("Changing info to: ", nameModified, ageModified);
-      console.log("From: ", name, age);
+      if (response && response.status === 200) {
+        console.log("Changing info to: ", nameModified, ageModified);
+        console.log("From: ", name, age);
+      }
     } catch (error) {
       console.error("Could not modify data: ", error);
     }
   };
-
+  const { logout } = useAuth();
   const handleLogout = async () => {
     try {
       const response = await logoutUser();
-      localStorage.clear();
-      console.log(response);
+      if (response && response.status === 200) {
+        logout();
+        localStorage.clear();
+      }
     } catch (error) {
       console.error("Could not logout: ", error);
     }
@@ -72,10 +78,19 @@ const UserAccountScreen = () => {
     setOpen(!open);
   };
 
-  const handleDeleteAccount = () => {
-    //BE call to delete user
-    localStorage.clear();
-    setOpen(!open);
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await deleteUser(username);
+      if (response && response.status === 200) {
+        setOpen(!open);
+        logout();
+        localStorage.clear();
+        navigate("/signin");
+      }
+    } catch (error) {
+      console.error("Could not delete: ", error);
+      setDeleteError("Could not delete your account");
+    }
   };
 
   return (

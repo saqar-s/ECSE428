@@ -15,7 +15,14 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
 import { addToFavourites } from "../APIcalls/RecipeCalls";
-const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable }) => {
+const RecipeCard = ({
+  title,
+  description,
+  author,
+  imageURL,
+  recipeId,
+  deletable,
+}) => {
   const [showMore, setShowMore] = React.useState(false);
 
   const handleShowMore = () => {
@@ -25,24 +32,26 @@ const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable 
   const [isFavorite, setIsFavorite] = React.useState(false);
 
   const handleToggleFavorite = async () => {
-    try{
+    try {
       setIsFavorite((prevIsFavorite) => !prevIsFavorite);
-      if (!isFavorite){
+      if (!isFavorite) {
         const username = localStorage.getItem("username");
         const favData = { email: username, id: recipeId };
         await addToFavourites(favData);
-      } 
+      }
     } catch (error) {
-        console.error("Could not add to favourites: ", error)
+      console.error("Could not add to favourites: ", error);
     }
-    
-
   };
   //handle add to calendar to be done
   const handleAddToCalendar = () => {
     console.log("add to caledar");
   };
 
+  //handle delete
+  const handleDelete = () => {
+    console.log("delete recipe");
+  };
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
     <Card
@@ -109,6 +118,13 @@ const RecipeCard = ({ title, description, author, imageURL, recipeId, deletable 
           onClick={handleAddToCalendar}
           style={{ width: "100%" }}
         />
+        {deletable && (
+          <CustomButton
+            label={"Delete Recipe"}
+            onClick={handleDelete}
+            style={{ width: "100%" }}
+          />
+        )}
       </CardActions>
     </Card>
   );
