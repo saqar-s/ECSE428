@@ -4,9 +4,8 @@ from models import db, Recipe, CalendarEvent
 from sqlalchemy import extract, and_
 from models import db
 from sqlalchemy import text
-import base64
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 calendar_event = Blueprint('calendar', __name__)
 
