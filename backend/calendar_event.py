@@ -4,8 +4,9 @@ from models import db, Recipe, CalendarEvent
 from sqlalchemy import extract, and_
 from models import db
 from sqlalchemy import text
+import base64
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 calendar_event = Blueprint('calendar', __name__)
 
@@ -124,5 +125,33 @@ def getFromCalender():
     except Exception as e: 
         return jsonify({'error': str(e)}), 500
 
-    
+@calendar_event.route('/viewWeeklyRecipes', methods=['GET'])
+def getWeeklyRecipes():
+    try:
+        user_email = request.args.get('user_email')
+        
+        if not user_email or "@" not in user_email:
+            return jsonify({'error': 'Email parameter is required'}), 400
 
+        user_recipes = CalendarEvent.query.filter_by(email=user_email).all()
+
+        if not user_recipes:
+            return jsonify({'message': 'No recipes found for the user'}), 404
+
+        weekday_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+        # Create a dictionary to store recipes for each day of the week
+        weekly_recipes = {day: [] for day in weekday_names}
+
+        # Populate the dictionary with recipes for each day
+        for event in user_recipes:
+            day_of_week = weekday_names[event.date.weekday()]
+            weekly_recipes[day_of_week].append({
+                'recipe_name': event.recipe.name,
+                'date': event.date.strftime('%Y-%m-%d')
+            })
+
+        return jsonify({'weekly_recipes': weekly_recipes}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
