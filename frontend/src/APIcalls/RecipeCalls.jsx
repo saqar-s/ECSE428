@@ -74,7 +74,10 @@ export const getRecipes = async (user_email = null) => {
 export const addToFavourites = async (data) => {
   try {
     const response = await api.post("/addFavourite", data);
-    return { status: response.status, message: "Added to favourites successfully" };
+    return {
+      status: response.status,
+      message: "Added to favourites successfully",
+    };
   } catch (error) {
     return { status: 500, message: "Internal server error" };
   }
@@ -82,13 +85,19 @@ export const addToFavourites = async (data) => {
 
 export const getFavourites = async (email) => {
   try {
-    // Make a GET request to the /favourites endpoint with the user's email included in the URL query parameters
-    //console.log(email);
     const response = await api.get(`/favourites?email=${email}`);
 
     return { status: response.status, data: response.data };
   } catch (error) {
-    return {error};
+    return { error };
   }
 };
 
+export const deleteFavourite = async (data) => {
+  try {
+    const response = await api.delete("/removeRecipeFromFavourites", { data });
+    return { status: response.status, data: response.data };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
+  }
+};

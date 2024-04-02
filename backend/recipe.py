@@ -199,30 +199,32 @@ def add_favourite():
 
 @recipe.route('/favourites', methods=['GET'])
 def get_favourites():
-    user_email = request.args.get('email')
-    #print(user_email)
-    
-    user = User.query.filter_by(email=user_email).first()
-    
-    if not user_email:
-        return jsonify({'message': 'User does not exist'}), 404
-    
-    favourite_recipes = []
-    for r in user.favourites:
-        recipe = Recipe.query.filter_by(id=r)
-        recipe = recipe[0]
-        # Encode the image data as Base64
-        if recipe.image:
-            image_base64 = base64.b64encode(recipe.image).decode('utf-8')
-        else:
-            image_base64 = None
+    try:
+        user_email = request.args.get('email')
+        user = User.query.filter_by(email=user_email).first()
+        
+        if not user_email:
+            return jsonify({'message': 'User does not exist'}), 404
+        
+        favourite_recipes = []
+        for r in user.favourites:
+            recipe = Recipe.query.filter_by(id=r).first()
+            if not recipe:
+                continue
+            # Encode the image data as Base64
+            if recipe.image:
+                image_base64 = base64.b64encode(recipe.image).decode('utf-8')
+            else:
+                image_base64 = None
 
-        favourite_recipes.append({
-                'id': recipe.id,
-                'name': recipe.name,
-                'ingredients': recipe.ingredients,
-                'description': recipe.description,
-                'email': recipe.email,
-                'image': image_base64
-            })
-    return jsonify({'favourites': favourite_recipes}), 200
+            favourite_recipes.append({
+                    'id': recipe.id,
+                    'name': recipe.name,
+                    'ingredients': recipe.ingredients,
+                    'description': recipe.description,
+                    'email': recipe.email,
+                    'image': image_base64
+                })
+        return jsonify({'favourites': favourite_recipes}), 200
+    except Exception as e: 
+        return jsonify({'message': "Internal server error"}), 500
