@@ -159,35 +159,42 @@ def removeRecipeFromFavourites():
 
     #IMP assuming that the user.favourites is a set, can only add a certain recipe to your favourites list once***
     user.favourites.remove(recipeId)
+    new_array = array.array('i', user.favourites) #this array method is important and needed if .commit() is to refract the changes 
+    user.favourites = new_array
     db.session.commit()
     return jsonify({'message': "Recipe removed from the user's favourites list succesfully"}), 200
     
 @recipe.route('/addFavourite', methods=['POST'])
 def add_favourite():
-    data = request.json
-    recipe_id = data.get('id')
-    # check if signed in !!!!!!!!!!!!!!!!!!!
-    #user_email = session.get('email') #is this right?
-    user_email = data.get('email')
-    user = User.query.filter_by(email=user_email).first()
-    if not user_email:
-        return jsonify({'message': 'User does not exist'}), 404
-    
-    recipe = Recipe.query.get(recipe_id)
-    if not recipe:
-        return jsonify({'message': 'Recipe not found'}), 404
-    
-    #user.favourites.append(recipe_id) #check this
-    favourite_list = [recipe_id]
-    favourite_array = array.array('i', favourite_list)
-    old_array = array.array('i', user.favourites)
-    for i in user.favourites:
-        if i == recipe_id:
-            return jsonify({'message': 'Recipe already favourited'}), 200
+    try:
+        data = request.json
+        recipe_id = data.get('id')
+        # check if signed in !!!!!!!!!!!!!!!!!!!
+        #user_email = session.get('email') #is this right?
+        user_email = data.get('email')
+        user = User.query.filter_by(email=user_email).first()
+        if not user_email:
+            return jsonify({'message': 'User does not exist'}), 404
         
-    user.favourites = old_array + favourite_array
-    db.session.commit()
-    return jsonify({'message': 'Recipe added to favourites successfully'}), 200
+        recipe = Recipe.query.get(recipe_id)
+        if not recipe:
+            return jsonify({'message': 'Recipe not found'}), 404
+        
+        #user.favourites.append(recipe_id) #check this
+        favourite_list = [recipe_id]
+        print(favourite_list)
+        favourite_array = array.array('i', favourite_list)
+        print(favourite_array)
+        old_array = array.array('i', user.favourites)
+        for i in user.favourites:
+            if i == recipe_id:
+                return jsonify({'message': 'Recipe already favourited'}), 200
+            
+        user.favourites = old_array + favourite_array
+        db.session.commit()
+        return jsonify({'message': 'Recipe added to favourites successfully'}), 200
+    except Exception as e: 
+        return jsonify({'message': "Internal server error"}), 500
         
 
 @recipe.route('/favourites', methods=['GET'])
