@@ -7,7 +7,8 @@ import {
   DashboardScreen,
   UserAccountScreen,
   PostScreen,
-  FavoritesScreen
+  FavoritesScreen,
+  CalendarScreen,
 } from "./Screens";
 import UserListScreen from "./Screens/UserListScreen";
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/post" element={<PostScreen />} />
         <Route path="/favourites" element={<FavoritesScreen />} />
         <Route path="/userlist" element={<UserListScreen />} />
+        <Route path="/calendar" element={<CalendarScreen />} />
       </Routes>
     </BrowserRouter>
   );

@@ -16,6 +16,7 @@ import CustomButton from "./CustomButton";
 import { COLORS } from "../GLOBAL";
 import { addToFavourites, deleteFavourite } from "../APIcalls/RecipeCalls";
 import { useFavorites } from "./FavoritesProvider";
+import Calendar from "./Calendar";
 const RecipeCard = ({
   title,
   description,
@@ -27,6 +28,7 @@ const RecipeCard = ({
 }) => {
   const [showMore, setShowMore] = React.useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const [calendarModalOpen, setCalendarModalOpen] = React.useState(false);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
@@ -47,12 +49,9 @@ const RecipeCard = ({
     }
   };
 
-  //handle add to calendar to be done
-  const handleAddToCalendar = () => {
-    console.log("add to caledar");
+  const handleCalendarOpen = () => {
+    setCalendarModalOpen(true);
   };
-
-  //handle delete
 
   const decodedImageURL = `data:image/jpeg;base64,${imageURL}`;
   return (
@@ -118,7 +117,7 @@ const RecipeCard = ({
 
         <CustomButton
           label={"Add to Calendar"}
-          onClick={handleAddToCalendar}
+          onClick={handleCalendarOpen}
           style={{ width: "100%" }}
         />
         {deletable && (
@@ -129,6 +128,12 @@ const RecipeCard = ({
           />
         )}
       </CardActions>
+
+      <Calendar
+        open={calendarModalOpen}
+        onClose={() => setCalendarModalOpen(false)}
+        recipeName={title}
+      />
     </Card>
   );
 };
