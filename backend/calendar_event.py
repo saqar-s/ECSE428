@@ -154,3 +154,49 @@ def getWeeklyRecipes():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+    
+@calendar_event.route('/viewWeeklyIngredients', methods=['GET'])
+def getWeeklyIngredients():
+    try:
+        user_email = request.args.get('user_email')
+        
+        if not user_email or "@" not in user_email:
+            return jsonify({'error': 'Email parameter is required'}), 400
+
+        user_recipes = CalendarEvent.query.filter_by(email=user_email).all()
+
+        if not user_recipes:
+            return jsonify({'message': 'No recipes found for the user'}), 404
+
+        weekday_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+        # Create a dictionary to store ingredients for each day of the week
+        weekly_ingredients = {day: [] for day in weekday_names}
+
+        # Populate the dictionary with ingredients for each day
+        for event in user_recipes:
+            day_of_week = weekday_names[event.date.weekday()]
+            ingredients = event.recipe.ingredients
+            cleaned_ingredients = []
+            current_word = ''
+            for char in ingredients:
+                if char == ',':
+                    if current_word:
+                        cleaned_ingredients.append(current_word.strip())
+                        current_word = ''
+                else:
+                    current_word += char
+            if current_word:
+                cleaned_ingredients.append(current_word.strip())
+
+            weekly_ingredients[day_of_week].append({
+                'ingredients': cleaned_ingredients,
+                'date': event.date.strftime('%Y-%m-%d')
+            })
+
+        return jsonify({'weekly_recipes': weekly_ingredients}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
