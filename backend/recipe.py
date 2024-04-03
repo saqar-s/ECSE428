@@ -142,7 +142,7 @@ def removeRecipeFromFavourites():
     #for a given user, we want to be able to remove a recipe from their favourites list
     data = request.json 
     email = data.get('email')
-    recipeId = data.get('id')
+    recipeId = data.get('id') 
 
     recipe = Recipe.query.filter_by(id=recipeId).first() #making sure the id is related to a recipe in our table 
 
